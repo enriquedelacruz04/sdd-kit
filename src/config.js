@@ -7,7 +7,6 @@ export const RESERVED = ["architecture", "superpowers"];
 export const INITIATIVE_FILES = ["roadmap.md", "checklists.md", "notes.md"];
 // .mjs y no .js: un proyecto sin "type": "module" no puede importar un .js con `export default`.
 export const CONFIG_FILE = "sdd.config.mjs";
-export const IMPORT_LINE = "@node_modules/@enriquedelacruz04/sdd-kit/METHODOLOGY.md";
 
 export const DEFAULTS = {
   ignore: [],
@@ -29,12 +28,13 @@ export function resolveConfig(user = {}) {
   if (user === null || typeof user !== "object" || Array.isArray(user))
     throw new Error(`${CONFIG_FILE} debe exportar un objeto con \`export default\``);
   for (const [key, value] of Object.entries(user)) {
-    if (!(key in DEFAULTS))
+    if (!Object.hasOwn(DEFAULTS, key))
       throw new Error(`clave desconocida "${key}"; las válidas son ${Object.keys(DEFAULTS).join(", ")}`);
     if (!Array.isArray(value) || value.some((v) => typeof v !== "string"))
       throw new Error(`"${key}" debe ser una lista de textos`);
   }
-  return { ...DEFAULTS, ...user };
+  // Cada lista se copia: quien recibe la configuración puede tocarla sin cambiar los valores por defecto.
+  return Object.fromEntries(Object.entries({ ...DEFAULTS, ...user }).map(([key, list]) => [key, [...list]]));
 }
 
 export async function loadConfig(root) {

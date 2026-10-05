@@ -17,7 +17,7 @@ const packed = new Set(files.map((f) => f.path.replace(/\\/g, "/")));
 
 // ---- lo que un proyecto necesita en node_modules: el método que importa su CLAUDE.md, el binario, el código
 // y todas las plantillas
-for (const file of [
+const REQUIRED_MISSING = [
   "METHODOLOGY.md",
   "CHANGELOG.md",
   "bin/sdd.js",
@@ -35,8 +35,9 @@ for (const file of [
   "templates/initiative/roadmap.md",
   "templates/initiative/checklists.md",
   "templates/initiative/notes.md",
-])
-  assert.ok(packed.has(file), `el paquete no lleva ${file}`);
+].filter((file) => !packed.has(file));
+// Se juntan todos antes de fallar: de uno en uno, un "files" mal escrito se arregla en tantas corridas como archivos.
+assert.deepEqual(REQUIRED_MISSING, [], `el paquete no lleva ${REQUIRED_MISSING.join(", ")}`);
 
 // ---- lo que es del repo del kit no viaja: sus arneses y su documentación no son del proyecto que lo instala
 for (const file of packed)

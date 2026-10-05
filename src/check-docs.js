@@ -96,6 +96,10 @@ export function checkDocs(io, userConfig = {}) {
 
   // Toda carpeta de docs/ es una iniciativa salvo las reservadas y las que el proyecto declara: una lista
   // escrita a mano deja fuera de la vigilancia a la iniciativa que nadie se acordó de añadir.
+  // `ignore` se compara con el nombre de cada carpeta: una ruta no coincide con ninguna y no ignoraría nada.
+  for (const entry of config.ignore)
+    if (/[\\/]/.test(entry))
+      fail(`${CONFIG_FILE}: "${entry}" en ignore debe ser solo el nombre de una carpeta de docs/, sin barras`);
   const skipped = new Set([...RESERVED, ...config.ignore]);
   const initiatives = [];
   for (const name of io.list("docs")) {
@@ -286,8 +290,9 @@ export function checkDocs(io, userConfig = {}) {
     const dir = `docs/${ini}`;
     const files = io.list(dir);
     // `assets` guarda las imágenes que la spec cita como referencia (fotos de un formato de papel).
-    if (files.filter((f) => f !== "assets").join(",") !== "checklists.md,notes.md,roadmap.md")
-      fail(`${ini}: contiene ${files.join(", ")}`);
+    const extra = files.filter((f) => f !== "assets" && !INITIATIVE_FILES.includes(f));
+    if (extra.length)
+      fail(`${ini}: sobra ${extra.join(", ")}: una iniciativa solo lleva sus tres archivos y una carpeta assets`);
     const raw = Object.fromEntries(INITIATIVE_FILES.map((f) => [f, read(`${dir}/${f}`)]));
     for (const [f, text] of Object.entries(raw)) {
       checkCitations(`${ini}/${f}`, text);
@@ -358,7 +363,8 @@ export function checkDocs(io, userConfig = {}) {
         }
         const c = l.match(/^- \*\*(\d+)\.([A-Z])(\d+)\*\*/);
         if (!c) {
-          if (/^(- \*\*\d|\d+\. )/.test(l)) fail(`${ini}: punto sin ID válido en el checklist ${n}: ${l.slice(0, 50)}`);
+          // Solo dentro de una sección: la introducción puede enumerar requisitos con una lista numerada.
+          if (letter && /^(- \*\*\d|\d+\. )/.test(l)) fail(`${ini}: punto sin ID válido en el checklist ${n}: ${l.slice(0, 50)}`);
           continue;
         }
         found++;
@@ -402,6 +408,9 @@ export function checkDocs(io, userConfig = {}) {
         .join("\n");
       const retake = intro.split(/\n\s*\n/).filter((p) => p.startsWith("**Retake:**"));
       const state = heads.get(n);
+      // Un Gate se cruza una vez en producción: lo que cambie después lo verifica un punto de la fase que lo cambia.
+      const gate = intro.split(/\n\s*\n/).some((paragraph) => paragraph.startsWith("**Gate:**"));
+      if (gate && state === "Stale") fail(`${ini}: el checklist ${n} es un Gate y está en Stale: un Gate no pasa a Stale`);
       if (state === "Stale" && !retake.length) fail(`${ini}: el checklist ${n} está en Stale sin su **Retake:**`);
       if ((state === "Passed" || state === "Not run") && retake.length)
         fail(`${ini}: el checklist ${n} está en ${state} y conserva su **Retake:**`);
@@ -461,18 +470,25 @@ export function checkDocs(io, userConfig = {}) {
     checkNotes(`${ini}/notes.md`, notes);
   }
 
-  const architecture = read("docs/architecture/notes.md");
-  checkCitations("architecture/notes.md", architecture);
-  checkRefs("architecture/notes.md", architecture, "architecture");
-  checkNotes("architecture/notes.md", stripEmojis("architecture/notes.md", architecture), { byTopic: true });
+  // Un archivo entero que falta se dice una vez: comprobar su contenido daría un error por cada cosa que llevaba.
+  if (!io.exists("docs/architecture/notes.md")) fail("no hay docs/architecture/notes.md: corre `sddkit init`");
+  else {
+    const architecture = read("docs/architecture/notes.md");
+    checkCitations("architecture/notes.md", architecture);
+    checkRefs("architecture/notes.md", architecture, "architecture");
+    checkNotes("architecture/notes.md", stripEmojis("architecture/notes.md", architecture), { byTopic: true });
+  }
 
-  const claude = read("CLAUDE.md");
-  checkHeadings("CLAUDE.md", claude, config.claudeHeadings);
-  // Nombrar el archivo en una frase no lo carga: el import es una línea propia que empieza por @.
-  if (!/^@\S*METHODOLOGY\.md\s*$/m.test(claude))
-    fail("CLAUDE.md no importa METHODOLOGY.md: sin esa línea el agente trabaja sin las reglas");
-  checkCitations("CLAUDE.md", claude);
-  checkRefs("CLAUDE.md", claude, null);
+  if (!io.exists("CLAUDE.md")) fail("no hay CLAUDE.md en la raíz del proyecto: corre `sddkit init`");
+  else {
+    const claude = read("CLAUDE.md");
+    checkHeadings("CLAUDE.md", claude, config.claudeHeadings);
+    // Nombrar el archivo en una frase no lo carga: el import es una línea propia que empieza por @.
+    if (!/^@\S*METHODOLOGY\.md\s*$/m.test(claude))
+      fail("CLAUDE.md no importa METHODOLOGY.md: sin esa línea el agente trabaja sin las reglas");
+    checkCitations("CLAUDE.md", claude);
+    checkRefs("CLAUDE.md", claude, null);
+  }
   if (README_STATES.test(read("docs/README.md"))) fail("docs/README.md lleva estados: debe ser solo un índice");
 
   // La ruta solo cuenta si empieza donde empiezan las rutas: sin el lookbehind, `packages/api/src/x.js` o una URL

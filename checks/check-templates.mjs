@@ -6,7 +6,7 @@ import path from "node:path";
 import { checkDocs } from "../src/check-docs.js";
 import { init } from "../src/commands/init.js";
 import { newInitiative } from "../src/commands/new.js";
-import { DEFAULTS, IMPORT_LINE } from "../src/config.js";
+import { DEFAULTS } from "../src/config.js";
 import { realIo } from "../src/io.js";
 
 const dirs = [];
@@ -34,6 +34,8 @@ const snapshot = (dir) =>
   );
 const check = (dir) => checkDocs(realIo(dir), DEFAULTS);
 
+// La línea que carga el método en cada proyecto. Se escribe aquí y no se lee de la plantilla: es lo que la fija.
+const IMPORT_LINE = "@node_modules/@enriquedelacruz04/sdd-kit/METHODOLOGY.md";
 const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "docs/architecture/notes.md"];
 
 // ---- lo que siembra `sddkit init` cumple el molde sin tocar nada: si no, el primer `sddkit check` de un proyecto

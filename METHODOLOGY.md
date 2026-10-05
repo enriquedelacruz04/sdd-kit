@@ -95,8 +95,18 @@ Un punto de checklist se escribe en una línea, con su ID, su estado y la acció
   que se busca aunque lo esperado parezca cumplirse.
 ```
 
-Los marcadores son `**Expected:**`, `**Failure to catch:**` y `**Blocked:**` en un punto, `**Retake:**` en la
-introducción de un checklist y `**Origin:**` en una deuda.
+Los marcadores son `**Expected:**`, `**Failure to catch:**` y `**Blocked:**` en un punto, `**Retake:**` y `**Gate:**`
+en la introducción de un checklist y `**Origin:**` en una deuda.
+
+Un checklist que es un Gate lo dice en su introducción, con un párrafo aparte que empieza por `**Gate:**` y nombra
+qué desbloquea. Con esa marca, el vigilante falla si el checklist pasa a `Stale`:
+
+```text
+**Gate:** desbloquea `PH3`. Lo cruza el administrador en producción.
+```
+
+La introducción de un checklist puede llevar una lista numerada de requisitos; dentro de una sección, toda línea
+que empieza por un número es un punto y lleva su ID.
 
 ### Un dato, un documento
 

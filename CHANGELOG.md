@@ -4,6 +4,17 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 1.2.0
+
+- Un checklist se marca como Gate con un párrafo `**Gate:**` en su introducción, y con la marca no puede pasar a
+  `Stale`.
+- Una lista numerada en la introducción de un checklist ya no se toma por un punto sin ID.
+- Una entrada de `ignore` con barras es un error: antes se aceptaba y no ignoraba nada.
+- Mensajes más claros: un `CLAUDE.md` o un `docs/architecture/notes.md` ausentes dan un solo error, y un archivo
+  de más en una iniciativa se nombra.
+
+Documentación que ya pasaba sigue pasando.
+
 ## 1.1.0
 
 Clave nueva `notIds` en `sdd.config.mjs`: palabras con forma de ID que no lo son. El vigilante deja de leerlas

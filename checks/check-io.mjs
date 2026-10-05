@@ -43,6 +43,14 @@ for (const io of [realIo(dir), virtualIo(FILES)]) {
     "docs/billing/roadmap.md",
     "docs/superpowers/specs/a-design.md",
   ]);
+
+  // ---- una carpeta existe, igual que un archivo: si los dos accesos discrepan aquí, un caso del arnés y un
+  // proyecto real dan respuestas distintas a la misma pregunta
+  assert.equal(io.exists("docs/billing"), true);
+
+  // ---- walk funciona también separado de su objeto: quien lo desestructura no tiene por qué saber cómo recursa
+  const { walk } = io;
+  assert.deepEqual(walk("docs", ["superpowers"]).sort(), ["docs/README.md", "docs/billing/roadmap.md"]);
 }
 
 fs.rmSync(dir, { recursive: true, force: true });

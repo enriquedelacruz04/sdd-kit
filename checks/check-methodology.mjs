@@ -56,7 +56,14 @@ for (const heading of [...ROADMAP_HEADINGS, ...CHECKLIST_HEADINGS, ...NOTE_SECTI
   assert.ok(text.includes(`\`${heading}\``), `el método no nombra el título "${heading}"`);
 for (const literal of ["`### Findings of checklist N`", "`## Findings without checklist`"])
   assert.ok(text.includes(literal), `el método no nombra ${literal}`);
-for (const marker of ["**Expected:**", "**Failure to catch:**", "**Blocked:**", "**Retake:**", "**Origin:**"])
+for (const marker of [
+  "**Expected:**",
+  "**Failure to catch:**",
+  "**Blocked:**",
+  "**Retake:**",
+  "**Gate:**",
+  "**Origin:**",
+])
   assert.ok(text.includes(marker), `el método no nombra el marcador ${marker}`);
 for (const prefix of ["PH1", "F1", "TD1", "ADR1", "N1", "RB1", "2.B3"])
   assert.ok(text.includes(`\`${prefix}\``), `el método no enseña el ID ${prefix}`);

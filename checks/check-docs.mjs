@@ -397,8 +397,9 @@ expectError(
 }
 
 // ---- cualquier otra entrada de más sigue rompiendo el molde: `assets` no abre la puerta a borradores ni a carpetas
-expectError({ ...VALID, "docs/fake/borrador.md": "" }, /fake: contiene borrador\.md/);
-expectError({ ...VALID, "docs/fake/otra/nota.md": "" }, /fake: contiene .*otra/);
+// El mensaje nombra lo que sobra: listar los cuatro archivos deja a quien lo lee buscando cuál es el intruso.
+expectError({ ...VALID, "docs/fake/borrador.md": "" }, /fake: sobra borrador\.md:/);
+expectError({ ...VALID, "docs/fake/otra/nota.md": "" }, /fake: sobra otra:/);
 
 // ---- una carpeta de docs/ que no es iniciativa queda fuera de la vigilancia sin que nadie lo decida: falla
 // hasta que se declara en `ignore`
@@ -600,5 +601,55 @@ assert.deepEqual(runFixture({ "CLAUDE.md": VALID["CLAUDE.md"] }), [
 
 // ---- una entrada de `notIds` que no tiene forma de ID no hace nada: es un error de tecleo, y se dice
 expectError(VALID, /"Foo" en notIds no tiene forma de ID/, { ...DEFAULTS, notIds: ["Foo"] });
+
+// ---- la introducción de un checklist enumera requisitos con una lista numerada, y eso no es un punto: el aviso de
+// "punto sin ID" solo tiene sentido dentro de una sección, que es donde viven los puntos
+{
+  const file = "docs/fake/checklists.md";
+  const intro = "Verifica `PH1`; `1.A2` es el que importa.";
+  assert.deepEqual(runFixture(withDefect(file, intro, `${intro}\n\n1. Tener una cuenta.\n2. Tener datos de prueba.`)), []);
+  expectError(
+    withDefect(file, "  En dos líneas.", "  En dos líneas.\n2. Un punto que perdió su ID."),
+    /punto sin ID válido en el checklist 1/,
+  );
+}
+
+// ---- `ignore` se compara con el nombre de cada carpeta de docs/: una ruta o una barra final no ignoran nada, y
+// aceptarlas en silencio deja la carpeta fallando sin explicación
+for (const bad of ["docs/research", "research/", "research\\apuntes"])
+  expectError(
+    { ...VALID, "docs/research/apuntes.md": "Texto suelto." },
+    /en ignore debe ser solo el nombre de una carpeta de docs\//,
+    { ...DEFAULTS, ignore: [bad] },
+  );
+
+// ---- un archivo entero que falta se dice una vez y con qué correr, no con un error por cada cosa que llevaba dentro
+{
+  const without = (file) => Object.fromEntries(Object.entries(VALID).filter(([k]) => k !== file));
+  assert.deepEqual(runFixture(without("CLAUDE.md")), ["no hay CLAUDE.md en la raíz del proyecto: corre `sddkit init`"]);
+  assert.deepEqual(runFixture(without("docs/architecture/notes.md")), [
+    "no hay docs/architecture/notes.md: corre `sddkit init`",
+  ]);
+}
+
+// ---- un Gate se cruza una vez y nunca pasa a Stale. La marca **Gate:** en su introducción es lo que deja al
+// vigilante comprobarlo; sin ella, la regla solo vivía en la cabeza de quien edita
+{
+  const file = "docs/fake/checklists.md";
+  const intro = "Verifica `PH1`; `1.A2` es el que importa.";
+  const gated = withDefect(file, intro, `${intro}\n\n**Gate:** desbloquea la fase siguiente.`);
+  assert.deepEqual(runFixture(gated), []);
+
+  const stale = { ...gated };
+  stale[file] = stale[file]
+    .replace("| 🟢 Passed | 2/2", "| 🟠 Stale | 2/2")
+    .replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟠 Stale")
+    .replace("**Gate:** desbloquea la fase siguiente.", "**Gate:** desbloquea la fase siguiente.\n\n**Retake:** all. Cambió.");
+  stale["docs/fake/roadmap.md"] = stale["docs/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
+  expectError(stale, /el checklist 1 es un Gate y está en Stale/);
+  // El mismo checklist en Stale, sin la marca, no da ese error: lo que falla es el Gate, no el Stale.
+  const plain = { ...stale, [file]: stale[file].replace("**Gate:** desbloquea la fase siguiente.\n\n", "") };
+  assert.ok(!runFixture(plain).some((e) => /es un Gate/.test(e)), "falso positivo sin la marca Gate");
+}
 
 console.log("OK docs");

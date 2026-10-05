@@ -10,11 +10,11 @@
 | ADR4 | Decision | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
 | ADR5 | Decision | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
 | TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
-| TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟠 Open     |
-| TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟠 Open     |
-| TD4  | Debt     | Mensajes poco claros cuando falta un archivo entero                        | 🟠 Open     |
-| TD5  | Debt     | El método no dice cómo se marca un checklist como Gate                     | 🟠 Open     |
-| TD6  | Debt     | Menores de `src/config.js` y `src/io.js`                                   | 🟠 Open     |
+| TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
+| TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
+| TD4  | Debt     | Mensajes poco claros cuando falta un archivo entero                        | 🟢 Resolved |
+| TD5  | Debt     | El método no dice cómo se marca un checklist como Gate                     | 🟢 Resolved |
+| TD6  | Debt     | Menores de `src/config.js` y `src/io.js`                                   | 🟢 Resolved |
 | N1   | Note     | El corredor de arneses del código no viaja                                 | —           |
 
 ## Decisions
@@ -70,37 +70,52 @@ sin su código a un ID borrado habría pasado en silencio.
 
 **Origin:** revisión final de la rama, 2026-10-05.
 
-### TD2 · Una lista numerada en la introducción de un checklist se toma por un punto · 🟠 Open
+### TD2 · Una lista numerada en la introducción de un checklist se toma por un punto · 🟢 Resolved (2026-10-05)
 
 El vigilante trata una línea que empieza por un número y un punto como un punto sin ID válido, aunque sea una
 enumeración de la introducción del checklist.
 
+**Cómo se pagó:** el aviso de punto sin ID solo se da dentro de una sección, en la versión 1.2.0. El método lo dice en "El
+molde de cada archivo".
+
 **Origin:** revisión final de la rama, 2026-10-05.
 
-### TD3 · `ignore` solo acepta nombres de carpeta · 🟠 Open
+### TD3 · `ignore` solo acepta nombres de carpeta · 🟢 Resolved (2026-10-05)
 
 Un valor con barra se acepta sin error y no ignora nada, porque se compara con el nombre de cada carpeta de `docs/`.
 
+**Cómo se pagó:** una entrada con barras es ahora un error que dice cómo se escribe, en la versión 1.2.0. Se descartó
+normalizarla: aceptar dos formas de escribir lo mismo es otra cosa que recordar.
+
 **Origin:** revisión final de la rama, 2026-10-05.
 
-### TD4 · Mensajes poco claros cuando falta un archivo entero · 🟠 Open
+### TD4 · Mensajes poco claros cuando falta un archivo entero · 🟢 Resolved (2026-10-05)
 
 Un `CLAUDE.md` ausente da ocho errores, uno por cada título que falta. Un archivo de más en una iniciativa lista los
 cuatro archivos sin decir cuál sobra.
 
+**Cómo se pagó:** en la versión 1.2.0, un `CLAUDE.md` o unas notas de arquitectura ausentes dan un solo error que dice
+qué correr, y el error de una iniciativa nombra el archivo que sobra.
+
 **Origin:** revisión final de la rama, 2026-10-05.
 
-### TD5 · El método no dice cómo se marca un checklist como Gate · 🟠 Open
+### TD5 · El método no dice cómo se marca un checklist como Gate · 🟢 Resolved (2026-10-05)
 
 El glosario define el Gate, pero ni el método ni el vigilante dicen dónde se escribe que un checklist lo es.
 
+**Cómo se pagó:** un párrafo `**Gate:**` en la introducción del checklist, en la versión 1.2.0. El método lo enseña y el
+vigilante falla si un checklist con la marca pasa a `Stale`.
+
 **Origin:** revisión final de la rama, 2026-10-05.
 
-### TD6 · Menores de `src/config.js` y `src/io.js` · 🟠 Open
+### TD6 · Menores de `src/config.js` y `src/io.js` · 🟢 Resolved (2026-10-05)
 
 Las claves heredadas se aceptan por `in`; las listas de los valores por defecto se comparten por referencia; `exists` se
 comporta distinto para carpetas entre los dos accesos; `walk` depende de `this`; y `IMPORT_LINE` no se usa fuera de un
 arnés.
+
+**Cómo se pagó:** en la versión 1.2.0. Las claves se comprueban con `Object.hasOwn`, cada lista se copia al resolver la
+configuración, una carpeta existe en los dos accesos, `walk` recursa sin `this` y la constante sin uso se quitó.
 
 **Origin:** revisión final de la rama, 2026-10-05.
 
