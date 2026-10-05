@@ -52,7 +52,7 @@ const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "d
   assert.equal(init(second), 0);
   assert.deepEqual(snapshot(dir), before);
   assert.ok(
-    second.logs.some((l) => /ya existe/.test(l) && l.includes("CLAUDE.md")),
+    second.logs.some((l) => /^  exists /.test(l) && l.includes("CLAUDE.md")),
     "init no avisa de lo que saltó",
   );
 

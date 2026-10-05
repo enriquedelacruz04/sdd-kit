@@ -38,7 +38,7 @@ export function newInitiative(name, { cwd, log, error }) {
   for (const file of INITIATIVE_FILES) {
     const text = fs.readFileSync(path.join(TEMPLATES, file), "utf8").replaceAll("{{title}}", title);
     fs.writeFileSync(path.join(dir, file), text);
-    log(`  creado     docs/${name}/${file}`);
+    log(`  created  docs/${name}/${file}`);
   }
 
   // La línea entra con el final de línea que ya tiene el índice: mezclarlos ensucia el diff en Windows.
@@ -50,6 +50,6 @@ export function newInitiative(name, { cwd, log, error }) {
   const end = lines.at(-1) === "" ? lines.length - 1 : lines.length;
   lines.splice(superpowers < 0 ? end : superpowers, 0, entry);
   fs.writeFileSync(readme, lines.join(eol));
-  log(`  anotado    docs/README.md`);
+  log(`  updated  docs/README.md`);
   return 0;
 }

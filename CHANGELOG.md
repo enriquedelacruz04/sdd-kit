@@ -4,6 +4,10 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 1.0.2
+
+Las etiquetas de la salida de `sddkit init` y `sddkit new` van en inglés: `created`, `exists` y `updated`.
+
 ## 1.0.1
 
 Licencia MIT. Sin cambios en el método, las plantillas ni el vigilante.

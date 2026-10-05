@@ -22,12 +22,12 @@ export function init({ cwd, log }) {
     const target = path.join(cwd, file);
     // Lo que ya existe es del proyecto: se informa y se sigue, nunca se pisa.
     if (fs.existsSync(target)) {
-      log(`  ya existe  ${file}`);
+      log(`  exists   ${file}`);
       continue;
     }
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(path.join(TEMPLATES, file), target);
-    log(`  creado     ${file}`);
+    log(`  created  ${file}`);
   }
 
   const pkgFile = path.join(cwd, "package.json");
@@ -49,11 +49,11 @@ export function init({ cwd, log }) {
     return 0;
   }
   if (pkg.scripts?.[SCRIPT]) {
-    log(`  ya existe  el script ${SCRIPT}`);
+    log(`  exists   script ${SCRIPT}`);
     return 0;
   }
   pkg.scripts = { ...pkg.scripts, [SCRIPT]: "sddkit check" };
   fs.writeFileSync(pkgFile, bom + serializeLike(raw, pkg));
-  log(`  creado     el script ${SCRIPT}`);
+  log(`  created  script ${SCRIPT}`);
   return 0;
 }
