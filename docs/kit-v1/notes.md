@@ -9,7 +9,7 @@
 | ADR3 | Decision | El método se importa desde `node_modules`                                  | 🟢 Accepted |
 | ADR4 | Decision | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
 | ADR5 | Decision | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
-| TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟠 Open     |
+| TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟠 Open     |
 | TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟠 Open     |
 | TD4  | Debt     | Mensajes poco claros cuando falta un archivo entero                        | 🟠 Open     |
@@ -59,10 +59,14 @@ instala siempre antes de llamarlo.
 
 ## Tech debt
 
-### TD1 · Una palabra con forma de ID no tiene escapatoria · 🟠 Open
+### TD1 · Una palabra con forma de ID no tiene escapatoria · 🟢 Resolved (2026-10-05)
 
 Una tecla de función o un código con forma de ID, escritos en prosa, fallan como cita sin código, y entre acentos graves
-fallan como cita a un ID que no existe. No hay forma de nombrarlos sin que el vigilante los lea como citas.
+fallan como cita a un ID que no existe. No había forma de nombrarlos sin que el vigilante los leyera como citas.
+
+**Cómo se pagó:** la clave `notIds` de `sdd.config.mjs`, en la versión 1.1.0. El proyecto declara la palabra una
+vez y el vigilante la borra del texto antes de buscar citas. Se descartó marcar solo los IDs que existen: una cita
+sin su código a un ID borrado habría pasado en silencio.
 
 **Origin:** revisión final de la rama, 2026-10-05.
 

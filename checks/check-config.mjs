@@ -43,4 +43,8 @@ assert.throws(() => resolveConfig("research"), /debe exportar un objeto/);
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
+// ---- `notIds` es una clave más: se acepta como lista de textos y nace vacía
+assert.deepEqual(DEFAULTS.notIds, []);
+assert.deepEqual(resolveConfig({ notIds: ["F12"] }).notIds, ["F12"]);
+
 console.log("OK config");

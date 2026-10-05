@@ -578,4 +578,27 @@ assert.deepEqual(runFixture({ "CLAUDE.md": VALID["CLAUDE.md"] }), [
   "no hay carpeta docs/ aquí: corre `sddkit init` en la raíz del proyecto",
 ]);
 
+// ---- una tecla de función o un código de producto tienen forma de ID sin serlo. Sin declararlos, fallan como
+// cita; declarados en `notIds`, dejan de leerse como IDs, sueltos o entre acentos graves
+{
+  const bare = withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo, que se abre con F12;");
+  expectError(bare, /F12 citado sin su código/);
+  assert.deepEqual(runFixture(bare, { ...DEFAULTS, notIds: ["F12"] }), []);
+
+  const coded = withDefect("docs/fake/notes.md", "Sale de (`ADR1`).", "Sale de (`ADR1`), con la tecla `F12`.");
+  expectError(coded, /cita F12, que no existe/);
+  assert.deepEqual(runFixture(coded, { ...DEFAULTS, notIds: ["F12"] }), []);
+
+  // Declarar una palabra no apaga la vigilancia de las demás: una cita de verdad sin su código sigue fallando.
+  expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1 con F12;"), /PH1 citado sin su código/, {
+    ...DEFAULTS,
+    notIds: ["F12"],
+  });
+  // Ni tapa a un ID que solo empieza igual.
+  expectError(bare, /F12 citado sin su código/, { ...DEFAULTS, notIds: ["F1"] });
+}
+
+// ---- una entrada de `notIds` que no tiene forma de ID no hace nada: es un error de tecleo, y se dice
+expectError(VALID, /"Foo" en notIds no tiene forma de ID/, { ...DEFAULTS, notIds: ["Foo"] });
+
 console.log("OK docs");

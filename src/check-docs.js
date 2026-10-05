@@ -115,6 +115,14 @@ export function checkDocs(io, userConfig = {}) {
     String.raw`\x60(${INI}|notes\.md|roadmap\.md|checklists\.md)\x60((?:\s+\x60${ID}\x60)(?:\s*,\s*\x60${ID}\x60)*)`,
     "g",
   );
+  // Una tecla de función o un código de producto tienen forma de ID sin serlo: el proyecto los declara y aquí se
+  // borran del texto antes de buscar citas, sueltos o entre acentos graves.
+  for (const word of config.notIds)
+    if (!new RegExp(`^${ID}$`).test(word)) fail(`${CONFIG_FILE}: "${word}" en notIds no tiene forma de ID`);
+  const NOT_IDS = config.notIds.length
+    ? new RegExp(String.raw`\x60?(?<![\w.#/\-])(?:${config.notIds.map(escapeRe).join("|")})(?!\w)\x60?`, "g")
+    : null;
+  const withoutNotIds = (text) => (NOT_IDS ? text.replace(NOT_IDS, "") : text);
   const PUBLICATION = config.publicationWords.length
     ? new RegExp(config.publicationWords.map(escapeRe).join("|"), "i")
     : null;
@@ -169,7 +177,8 @@ export function checkDocs(io, userConfig = {}) {
   };
 
   // Una cita a un ID lleva cada pieza en su propio código: (`iniciativa` `N3`), (`notes.md` `N3`), (`N3`).
-  const checkCitations = (file, text) => {
+  const checkCitations = (file, rawText) => {
+    const text = withoutNotIds(rawText);
     let fence = false;
     text.split("\n").forEach((line, i) => {
       if (line.startsWith("```")) {
@@ -208,7 +217,8 @@ export function checkDocs(io, userConfig = {}) {
     }
     registry.set(name, entry);
   };
-  const checkRefs = (file, text, home) => {
+  const checkRefs = (file, rawText, home) => {
+    const text = withoutNotIds(rawText);
     const missing = (cite) => fail(`${file}: cita ${cite}, que no existe`);
     const rest = text.replace(/^```[\s\S]*?^```/gm, "").replace(CITE_GROUP, (_, prefix, list) => {
       const bag = prefix.endsWith(".md") ? home && registry.get(home)?.[prefix] : registry.get(prefix)?.all;

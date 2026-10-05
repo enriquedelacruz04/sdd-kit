@@ -6,7 +6,7 @@ comprueba que el molde se cumple.
 ## Instalar en un proyecto
 
 ```bash
-npm i -D github:enriquedelacruz04/sdd-kit#v1.0.2
+npm i -D github:enriquedelacruz04/sdd-kit#v1.1.0
 npx sddkit init
 npm run check:docs
 ```
@@ -33,6 +33,7 @@ que son las de ese proyecto.
 | `claudeHeadings`   | Títulos obligatorios del `CLAUDE.md` del proyecto |
 | `publicationWords` | Qué cuenta como hablar de publicación             |
 | `pathRoots`        | Raíces cuyas rutas citadas deben existir          |
+| `notIds`           | Palabras con forma de ID que no lo son, como F12  |
 
 ## Subir de versión
 

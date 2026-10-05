@@ -109,4 +109,8 @@ assert.ok(
   "el método no da las seis columnas de `## Findings without checklist`",
 );
 
+// ---- el vigilante lee como cita cualquier palabra con forma de ID: sin la salida escrita en el método, quien topa
+// con el error no sabe que existe
+assert.ok(text.includes("`notIds`"), "el método no nombra `notIds`");
+
 console.log("OK methodology");

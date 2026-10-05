@@ -22,6 +22,7 @@ export const DEFAULTS = {
   ],
   publicationWords: ["publicar", "publicaci", "publicad", "release", "deploy"],
   pathRoots: ["docs", "src", "scripts"],
+  notIds: [],
 };
 
 export function resolveConfig(user = {}) {
