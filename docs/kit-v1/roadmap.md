@@ -17,8 +17,8 @@ vigilante que nacieron dentro del admin de Cappi. Solo toca este repo.
 
 ## Execution order
 
-`PH1` en `Verified` → etiquetar `v1.0.0` sobre `main` y publicar el repo en GitHub. Hasta entonces el kit se
-instala desde un `.tgz` local.
+`PH1` en `Verified` → `v1.0.0` etiquetada sobre `main` y publicada en GitHub el 2026-10-05. Una versión nueva es
+otro tag sobre `main`.
 
 ## Debt and decisions
 
