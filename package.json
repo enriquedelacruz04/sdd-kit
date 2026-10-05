@@ -1,6 +1,6 @@
 {
   "name": "@enriquedelacruz04/sdd-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Spec Driven Development: las reglas, el molde de docs/ y el vigilante que lo comprueba",
   "type": "module",
   "bin": { "sddkit": "bin/sdd.js" },
@@ -11,6 +11,6 @@
     "checks": "node checks/run-all.mjs",
     "check:docs": "node bin/sdd.js check"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true
 }
