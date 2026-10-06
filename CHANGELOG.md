@@ -4,6 +4,16 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 2.0.0
+
+Cambia una regla del método: una rama de feature sale de la rama de trabajo de quien la construye, no de la rama
+de integración (paso 4), y vuelve a ella antes de llegar a la de integración. La fase pasa a `Built` cuando llega
+a la rama de integración (paso 7), no al cerrar la rama de feature.
+
+**Migración:** declara en `## Branches` del `CLAUDE.md` la rama de trabajo de cada integrante del equipo. Una fase
+marcada `Built` que todavía no está en la rama de integración vuelve a `Building`. El vigilante no cambia:
+documentación que ya pasaba sigue pasando.
+
 ## 1.3.0
 
 Una palabra de `notIds` solo se ignora en los documentos donde ese ID no existe, y nunca dentro de una cita con
