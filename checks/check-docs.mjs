@@ -61,7 +61,7 @@ Una iniciativa de prueba.
 
 \`PH1\` en \`Verified\` → publicar la aplicación.
 
-## Debt and decisions
+## Debt and ADRs
 
 El resumen y el detalle están en \`notes.md\`.
 

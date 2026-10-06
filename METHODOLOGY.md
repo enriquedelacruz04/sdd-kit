@@ -62,7 +62,7 @@ las imágenes que su spec cita.
 Los títulos, los marcadores y los encabezados de tabla van en inglés y se escriben exactamente así: el vigilante
 busca los títulos y los marcadores por su texto, y lee las tablas por la posición de sus columnas.
 
-- **`roadmap.md`**: `## Phases summary`, `## Phase index`, `## Execution order`, `## Debt and decisions` y, debajo,
+- **`roadmap.md`**: `## Phases summary`, `## Phase index`, `## Execution order`, `## Debt and ADRs` y, debajo,
   un título por fase con la forma `## PH1 · Nombre · 🟣 Designed`.
 - **`checklists.md`**: `## Checklists summary`, `## Findings` y, debajo, un título por checklist con la forma
   `## Checklist 1 · Nombre · ⚪ Not run`. Dentro de cada uno, sus secciones (`### A · Nombre`), sus puntos y, al
@@ -118,7 +118,7 @@ cambian: IDs, reglas, rutas.
   checklists.
 - El roadmap habla de bloqueos entre fases y decisiones, por ID: "`PH3` espera a `PH2` en `Verified`".
 - La publicación aparece solo en `## Execution order` de cada roadmap.
-- `notes.md` abre con un resumen de todo lo que guarda; la sección `## Debt and decisions` del roadmap solo remite
+- `notes.md` abre con un resumen de todo lo que guarda; la sección `## Debt and ADRs` del roadmap solo remite
   ahí. El resumen va agrupado por tipo (`ADR`, `Debt`, `Note`, `Runbook`), en el mismo orden que las
   secciones. `architecture/notes.md` es la excepción a medias: sus secciones son temas, no tipos, pero su
   `## Summary` va igual que en una iniciativa, agrupado por tipo.

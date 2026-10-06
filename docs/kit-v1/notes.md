@@ -89,6 +89,9 @@ en todo el molde. **Decisión:** el tipo es `ADR` en el glosario y en la columna
 `notes.md` se titula `## ADRs`, para que la palabra sea una sola en los tres sitios. El precio es una versión
 mayor, la 3.0.0: cada proyecto reescribe esa columna y ese título en sus `notes.md`.
 
+La versión 4.0.0 llevó la misma palabra al roadmap, cuya sección pasa a titularse `## Debt and ADRs`. Se
+decidió con la 3.0.0 ya etiquetada, y por eso es otra versión mayor.
+
 ## Tech debt
 
 ### TD1 · Una palabra con forma de ID no tiene escapatoria · 🟢 Resolved (2026-10-05)

@@ -6,7 +6,7 @@ comprueba que el molde se cumple.
 ## Instalar en un proyecto
 
 ```bash
-npm i -D github:enriquedelacruz04/sdd-kit#v3.0.0
+npm i -D github:enriquedelacruz04/sdd-kit#v4.0.0
 npx sddkit init
 npm run check:docs
 ```

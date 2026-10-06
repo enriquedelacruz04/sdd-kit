@@ -18,7 +18,7 @@ Qué resuelve la iniciativa, en dos o tres líneas, y qué repos toca.
 
 `PH1` en `Verified` → lo que haya que publicar, y en qué orden.
 
-## Debt and decisions
+## Debt and ADRs
 
 El resumen y el detalle están en `notes.md`.
 

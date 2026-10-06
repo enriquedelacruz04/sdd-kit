@@ -22,7 +22,7 @@ const ADR = { Proposed: "🟡", Accepted: "🟢", Superseded: "⚫" };
 const TD = { Open: "🟠", Resolved: "🟢" };
 export const STATES = { PHASE, CHECKLIST, POINT, FINDING, SEVERITY, ADR, TD };
 
-export const ROADMAP_HEADINGS = ["## Phases summary", "## Phase index", "## Execution order", "## Debt and decisions"];
+export const ROADMAP_HEADINGS = ["## Phases summary", "## Phase index", "## Execution order", "## Debt and ADRs"];
 export const CHECKLIST_HEADINGS = ["## Checklists summary", "## Findings"];
 export const NOTE_SECTIONS = ["## Summary", "## ADRs", "## Tech debt", "## Notes", "## Runbooks", "## References"];
 const NOTE_TYPES = { ADR: "ADR", TD: "Debt", N: "Note", RB: "Runbook" };
@@ -323,8 +323,8 @@ export function checkDocs(io, userConfig = {}) {
     }
     for (const id of phases.keys()) if (!index.some((r) => r[0] === id)) fail(`${ini}: ${id} no está en el índice`);
     if (/checklist/i.test(roadmap)) fail(`${ini}/roadmap.md nombra un checklist`);
-    if (/\b(ADR|TD)\d+\b/.test(section(roadmap, "## Debt and decisions")))
-      fail(`${ini}/roadmap.md: "Debt and decisions" solo remite a notes.md`);
+    if (/\b(ADR|TD)\d+\b/.test(section(roadmap, "## Debt and ADRs")))
+      fail(`${ini}/roadmap.md: "Debt and ADRs" solo remite a notes.md`);
     const scanPublication = (file, text) =>
       text.split("\n").forEach((l, i) => {
         if (PUBLICATION?.test(l)) fail(`${file}:${i + 1} habla de publicación: ${l.trim().slice(0, 90)}`);

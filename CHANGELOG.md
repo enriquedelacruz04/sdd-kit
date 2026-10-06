@@ -4,6 +4,14 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 4.0.0
+
+La sección del roadmap que remite a `notes.md` se titula `## Debt and ADRs`, no `## Debt and decisions`. Completa
+el renombre de la 3.0.0: el molde ya no usa la palabra `Decision` en ningún título ni tipo.
+
+**Migración:** en el `roadmap.md` de cada iniciativa, el título `## Debt and decisions` se renombra a
+`## Debt and ADRs`.
+
 ## 3.0.0
 
 El tipo de una decisión se llama `ADR`, como su prefijo de ID: en la columna `Type` de `## Summary` y en el
