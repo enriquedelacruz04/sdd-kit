@@ -120,13 +120,18 @@ export function checkDocs(io, userConfig = {}) {
     "g",
   );
   // Una tecla de función o un código de producto tienen forma de ID sin serlo: el proyecto los declara y aquí se
-  // borran del texto antes de buscar citas, sueltos o entre acentos graves.
+  // borran del texto antes de buscar citas, sueltos o entre acentos graves. Solo donde ese ID no existe: en una
+  // iniciativa que sí tiene un F5, "F5" es su hallazgo, y borrarlo dejaría sus citas sin vigilar.
   for (const word of config.notIds)
     if (!new RegExp(`^${ID}$`).test(word)) fail(`${CONFIG_FILE}: "${word}" en notIds no tiene forma de ID`);
-  const NOT_IDS = config.notIds.length
-    ? new RegExp(String.raw`\x60?(?<![\w.#/\-])(?:${config.notIds.map(escapeRe).join("|")})(?!\w)\x60?`, "g")
-    : null;
-  const withoutNotIds = (text) => (NOT_IDS ? text.replace(NOT_IDS, "") : text);
+  const withoutNotIds = (text, home) => {
+    const words = config.notIds.filter((word) => !registry.get(home)?.all.has(word));
+    if (!words.length) return text;
+    return text.replace(
+      new RegExp(String.raw`\x60?(?<![\w.#/\-])(?:${words.map(escapeRe).join("|")})(?!\w)\x60?`, "g"),
+      "",
+    );
+  };
   const PUBLICATION = config.publicationWords.length
     ? new RegExp(config.publicationWords.map(escapeRe).join("|"), "i")
     : null;
@@ -181,8 +186,8 @@ export function checkDocs(io, userConfig = {}) {
   };
 
   // Una cita a un ID lleva cada pieza en su propio código: (`iniciativa` `N3`), (`notes.md` `N3`), (`N3`).
-  const checkCitations = (file, rawText) => {
-    const text = withoutNotIds(rawText);
+  const checkCitations = (file, rawText, home) => {
+    const text = withoutNotIds(rawText, home);
     let fence = false;
     text.split("\n").forEach((line, i) => {
       if (line.startsWith("```")) {
@@ -222,14 +227,16 @@ export function checkDocs(io, userConfig = {}) {
     registry.set(name, entry);
   };
   const checkRefs = (file, rawText, home) => {
-    const text = withoutNotIds(rawText);
     const missing = (cite) => fail(`${file}: cita ${cite}, que no existe`);
-    const rest = text.replace(/^```[\s\S]*?^```/gm, "").replace(CITE_GROUP, (_, prefix, list) => {
+    // Las citas con prefijo se comprueban sobre el texto entero: nombran la iniciativa o el archivo, así que una
+    // palabra de `notIds` ahí dentro es un ID de verdad.
+    const unprefixed = rawText.replace(/^```[\s\S]*?^```/gm, "").replace(CITE_GROUP, (_, prefix, list) => {
       const bag = prefix.endsWith(".md") ? home && registry.get(home)?.[prefix] : registry.get(prefix)?.all;
       if (bag) for (const [, id] of list.matchAll(CODE_ID)) if (!bag.has(id)) missing(`\`${prefix}\` \`${id}\``);
       return "";
     });
     if (!home) return;
+    const rest = withoutNotIds(unprefixed, home);
     const bag = registry.get(home).all;
     for (const [, id] of [...rest.matchAll(CODE_ID), ...rest.matchAll(STATE_ID)]) if (!bag.has(id)) missing(id);
   };
@@ -295,7 +302,7 @@ export function checkDocs(io, userConfig = {}) {
       fail(`${ini}: sobra ${extra.join(", ")}: una iniciativa solo lleva sus tres archivos y una carpeta assets`);
     const raw = Object.fromEntries(INITIATIVE_FILES.map((f) => [f, read(`${dir}/${f}`)]));
     for (const [f, text] of Object.entries(raw)) {
-      checkCitations(`${ini}/${f}`, text);
+      checkCitations(`${ini}/${f}`, text, ini);
       checkRefs(`${ini}/${f}`, text, ini);
     }
     const roadmap = stripEmojis(`${ini}/roadmap.md`, raw["roadmap.md"]);
@@ -474,7 +481,7 @@ export function checkDocs(io, userConfig = {}) {
   if (!io.exists("docs/architecture/notes.md")) fail("no hay docs/architecture/notes.md: corre `sddkit init`");
   else {
     const architecture = read("docs/architecture/notes.md");
-    checkCitations("architecture/notes.md", architecture);
+    checkCitations("architecture/notes.md", architecture, "architecture");
     checkRefs("architecture/notes.md", architecture, "architecture");
     checkNotes("architecture/notes.md", stripEmojis("architecture/notes.md", architecture), { byTopic: true });
   }
@@ -486,7 +493,7 @@ export function checkDocs(io, userConfig = {}) {
     // Nombrar el archivo en una frase no lo carga: el import es una línea propia que empieza por @.
     if (!/^@\S*METHODOLOGY\.md\s*$/m.test(claude))
       fail("CLAUDE.md no importa METHODOLOGY.md: sin esa línea el agente trabaja sin las reglas");
-    checkCitations("CLAUDE.md", claude);
+    checkCitations("CLAUDE.md", claude, null);
     checkRefs("CLAUDE.md", claude, null);
   }
   if (README_STATES.test(read("docs/README.md"))) fail("docs/README.md lleva estados: debe ser solo un índice");

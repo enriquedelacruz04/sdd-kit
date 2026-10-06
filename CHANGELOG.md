@@ -4,6 +4,13 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 1.3.0
+
+Una palabra de `notIds` solo se ignora en los documentos donde ese ID no existe, y nunca dentro de una cita con
+prefijo. Antes se ignoraba en todo `docs/`, y declarar una tecla con el nombre de un hallazgo real dejaba sin
+vigilar las citas a ese hallazgo. Un proyecto que dependía de eso verá ahora el error que ya tenía: una cita sin
+su código o a un ID que no existe.
+
 ## 1.2.0
 
 - Un checklist se marca como Gate con un párrafo `**Gate:**` en su introducción, y con la marca no puede pasar a

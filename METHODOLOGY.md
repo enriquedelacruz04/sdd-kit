@@ -194,7 +194,9 @@ identificadores. La prosa, en español.
 - Las specs y los planes no llevan IDs: se citan por su nombre de archivo, y un apartado suyo, por su título
   (`2026-09-04-pivot-tables-design.md`, apartado "Alcance"). Es la única cita entre documentos que no va por ID.
 - Una palabra con forma de ID que no lo es —una tecla de función, un código de producto— se declara en `notIds` de
-  `sdd.config.mjs`. Declarada, el vigilante deja de leerla como cita, suelta o entre acentos graves.
+  `sdd.config.mjs`. Declarada, el vigilante deja de leerla como cita, suelta o entre acentos graves, en los
+  documentos donde ese ID no existe. En una iniciativa que sí tiene un ID con ese nombre sigue siendo su ID, y una
+  cita con prefijo se comprueba siempre.
 
 ## Cómo se corre un checklist
 

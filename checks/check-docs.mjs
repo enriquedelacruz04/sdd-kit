@@ -599,6 +599,33 @@ assert.deepEqual(runFixture({ "CLAUDE.md": VALID["CLAUDE.md"] }), [
   expectError(bare, /F12 citado sin su código/, { ...DEFAULTS, notIds: ["F1"] });
 }
 
+// ---- una palabra de `notIds` solo se ignora donde ese ID no existe. Ignorarla en todas partes apagaba la
+// vigilancia de un hallazgo de verdad con el mismo nombre: "un F5" en una nota tapaba las citas al F5 de otra
+// iniciativa
+{
+  const config = { ...DEFAULTS, notIds: ["F1"] };
+  // En la iniciativa que tiene un hallazgo F1 sigue siendo un ID: suelto en la prosa, falla.
+  expectError(
+    withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo con F1;"),
+    /F1 citado sin su código/,
+    config,
+  );
+  // Donde no existe —las notas de arquitectura— sí se ignora.
+  const architecture = withDefect(
+    "docs/architecture/notes.md",
+    "# Architecture — notes\n",
+    "# Architecture — notes\n\nLa lista no sobrevive a un F1.\n",
+  );
+  expectError(architecture, /F1 citado sin su código/);
+  assert.deepEqual(runFixture(architecture, config), []);
+  // Una cita con prefijo nombra la iniciativa, así que no puede ser una tecla: se comprueba siempre.
+  expectError(
+    withDefect("CLAUDE.md", "Empieza por `docs/README.md`.", "Empieza por `docs/README.md` (`fake` `F9`)."),
+    /cita `fake` `F9`, que no existe/,
+    { ...DEFAULTS, notIds: ["F9"] },
+  );
+}
+
 // ---- una entrada de `notIds` que no tiene forma de ID no hace nada: es un error de tecleo, y se dice
 expectError(VALID, /"Foo" en notIds no tiene forma de ID/, { ...DEFAULTS, notIds: ["Foo"] });
 

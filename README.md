@@ -6,7 +6,7 @@ comprueba que el molde se cumple.
 ## Instalar en un proyecto
 
 ```bash
-npm i -D github:enriquedelacruz04/sdd-kit#v1.2.0
+npm i -D github:enriquedelacruz04/sdd-kit#v1.3.0
 npx sddkit init
 npm run check:docs
 ```
@@ -34,6 +34,9 @@ que son las de ese proyecto.
 | `publicationWords` | Qué cuenta como hablar de publicación             |
 | `pathRoots`        | Raíces cuyas rutas citadas deben existir          |
 | `notIds`           | Palabras con forma de ID que no lo son, como F12  |
+
+Una palabra de `notIds` solo se ignora donde ese ID no existe: en una iniciativa que tiene un hallazgo con ese
+nombre, sigue siendo su hallazgo.
 
 ## Subir de versión
 

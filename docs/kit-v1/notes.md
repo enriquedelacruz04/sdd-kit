@@ -68,6 +68,10 @@ fallan como cita a un ID que no existe. No había forma de nombrarlos sin que el
 vez y el vigilante la borra del texto antes de buscar citas. Se descartó marcar solo los IDs que existen: una cita
 sin su código a un ID borrado habría pasado en silencio.
 
+La versión 1.3.0 la acotó: la palabra solo se borra en los documentos donde ese ID no existe. La primera
+migración real declaró una tecla que en dos iniciativas era también un hallazgo, y la lista global dejaba sus
+citas sin vigilar.
+
 **Origin:** revisión final de la rama, 2026-10-05.
 
 ### TD2 · Una lista numerada en la introducción de un checklist se toma por un punto · 🟢 Resolved (2026-10-05)
