@@ -4,13 +4,14 @@
 
 | ID   | Type     | What                                                                       | Status      |
 | ---- | -------- | -------------------------------------------------------------------------- | ----------- |
-| ADR1 | Decision | Paquete npm, no plugin ni submódulo                                        | 🟢 Accepted |
-| ADR2 | Decision | Nomenclatura en inglés, prosa en español                                   | 🟢 Accepted |
-| ADR3 | Decision | El método se importa desde `node_modules`                                  | 🟢 Accepted |
-| ADR4 | Decision | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
-| ADR5 | Decision | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
-| ADR6 | Decision | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
-| ADR7 | Decision | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
+| ADR1 | ADR      | Paquete npm, no plugin ni submódulo                                        | 🟢 Accepted |
+| ADR2 | ADR      | Nomenclatura en inglés, prosa en español                                   | 🟢 Accepted |
+| ADR3 | ADR      | El método se importa desde `node_modules`                                  | 🟢 Accepted |
+| ADR4 | ADR      | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
+| ADR5 | ADR      | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
+| ADR6 | ADR      | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
+| ADR7 | ADR      | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
+| ADR8 | ADR      | El tipo y la sección de una decisión se llaman `ADR`, como su prefijo      | 🟢 Accepted |
 | TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -20,7 +21,7 @@
 | N1   | Note     | El corredor de arneses del código no viaja                                 | —           |
 | N2   | Note     | El checklist se quedó en Passed durante cuatro versiones                   | —           |
 
-## Decisions
+## ADRs
 
 ### ADR1 · Paquete npm, no plugin ni submódulo · 🟢 Accepted (2026-10-05)
 
@@ -78,6 +79,15 @@ libre, y nada lo comprobaba. **Alternativas:** dejarlo en prosa; una columna nue
 que cambia una tabla que el vigilante lee por posición; o un párrafo con marcador en la introducción, como
 `**Retake:**`. **Decisión:** el párrafo `**Gate:**`, que nombra qué desbloquea. No toca ninguna tabla, se lee
 donde se describe el checklist, y con la marca el vigilante falla si el checklist pasa a `Stale`.
+
+### ADR8 · El tipo y la sección de una decisión se llaman `ADR`, como su prefijo · 🟢 Accepted (2026-10-06)
+
+**Contexto:** el glosario llamaba `Decision` al término y `ADR` a su prefijo, y la columna `Type` del resumen
+pedía `Decision` junto a un ID que ya dice `ADR`. **Alternativas:** dejarlo, como `Tech debt` y su prefijo;
+renombrar solo la fila del glosario, que deja al glosario diciendo una cosa y al resumen otra; o renombrar el tipo
+en todo el molde. **Decisión:** el tipo es `ADR` en el glosario y en la columna `Type`, y la sección de
+`notes.md` se titula `## ADRs`, para que la palabra sea una sola en los tres sitios. El precio es una versión
+mayor, la 3.0.0: cada proyecto reescribe esa columna y ese título en sus `notes.md`.
 
 ## Tech debt
 

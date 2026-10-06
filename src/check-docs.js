@@ -24,8 +24,8 @@ export const STATES = { PHASE, CHECKLIST, POINT, FINDING, SEVERITY, ADR, TD };
 
 export const ROADMAP_HEADINGS = ["## Phases summary", "## Phase index", "## Execution order", "## Debt and decisions"];
 export const CHECKLIST_HEADINGS = ["## Checklists summary", "## Findings"];
-export const NOTE_SECTIONS = ["## Summary", "## Decisions", "## Tech debt", "## Notes", "## Runbooks", "## References"];
-const NOTE_TYPES = { ADR: "Decision", TD: "Debt", N: "Note", RB: "Runbook" };
+export const NOTE_SECTIONS = ["## Summary", "## ADRs", "## Tech debt", "## Notes", "## Runbooks", "## References"];
+const NOTE_TYPES = { ADR: "ADR", TD: "Debt", N: "Note", RB: "Runbook" };
 const COLOR_MAPS = {
   "roadmap.md": [PHASE],
   "checklists.md": [CHECKLIST, POINT, FINDING, SEVERITY],

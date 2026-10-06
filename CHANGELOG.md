@@ -4,6 +4,17 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 3.0.0
+
+El tipo de una decisión se llama `ADR`, como su prefijo de ID: en la columna `Type` de `## Summary` y en el
+glosario, donde antes decía `Decision`. La sección de `notes.md` que las guarda se titula `## ADRs`, no
+`## Decisions`. En el glosario, además, `Free test` pasa a llamarse `Exploratory test`, y la columna `Estándar`
+deja su sitio a una de estados.
+
+**Migración:** en el `## Summary` de cada `notes.md`, incluido `docs/architecture/notes.md`, la fila de cada
+`ADR#` lleva `ADR` en la columna `Type`; con `Decision`, el vigilante falla y nombra la fila. En el
+`notes.md` de cada iniciativa, el título `## Decisions` se renombra a `## ADRs`.
+
 ## 2.0.0
 
 Cambia una regla del método: una rama de feature sale de la rama de trabajo de quien la construye, no de la rama

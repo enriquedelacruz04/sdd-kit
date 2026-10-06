@@ -5,7 +5,7 @@
 | ID  | Type | What | Status |
 | --- | ---- | ---- | ------ |
 
-## Decisions
+## ADRs
 
 ## Tech debt
 

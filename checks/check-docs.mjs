@@ -105,11 +105,11 @@ Verifica \`PH1\`; \`1.A2\` es el que importa.
 
 | ID | Type | What | Status |
 | --- | --- | --- | --- |
-| ADR1 | Decision | Una decisión | 🟢 Accepted |
+| ADR1 | ADR | Una decisión | 🟢 Accepted |
 | TD1 | Debt | Una deuda | 🟠 Open |
 | N1 | Note | Una nota | — |
 
-## Decisions
+## ADRs
 
 ### ADR1 · Una decisión · 🟢 Accepted (2026-09-14)
 
@@ -336,16 +336,22 @@ expectError(
 expectError(
   withDefect(
     "docs/fake/notes.md",
-    "| ADR1 | Decision | Una decisión | 🟢 Accepted |\n| TD1 | Debt | Una deuda | 🟠 Open |",
-    "| TD1 | Debt | Una deuda | 🟠 Open |\n| ADR1 | Decision | Una decisión | 🟢 Accepted |",
+    "| ADR1 | ADR | Una decisión | 🟢 Accepted |\n| TD1 | Debt | Una deuda | 🟠 Open |",
+    "| TD1 | Debt | Una deuda | 🟠 Open |\n| ADR1 | ADR | Una decisión | 🟢 Accepted |",
   ),
   /ADR1 rompe el orden por tipo del resumen/,
 );
 
+// ---- el tipo de un ADR es ADR, como su prefijo: Decision, su nombre hasta la 2.x, ya no pasa (kit-v1 ADR8)
+expectError(
+  withDefect("docs/fake/notes.md", "| ADR1 | ADR |", "| ADR1 | Decision |"),
+  /ADR1 es ADR y el resumen dice "Decision"/,
+);
+
 // ---- con las secciones en el mismo orden en todas las iniciativas, cada entrada se busca en el mismo sitio
 expectError(
-  withDefect("docs/fake/notes.md", "## Decisions", "## References\n\nUn enlace.\n\n## Decisions"),
-  /"## Decisions" está fuera de orden/,
+  withDefect("docs/fake/notes.md", "## ADRs", "## References\n\nUn enlace.\n\n## ADRs"),
+  /"## ADRs" está fuera de orden/,
 );
 expectError(
   withDefect("docs/fake/notes.md", "## Notes", "## Loose notes"),
@@ -490,7 +496,7 @@ expectError(
 }
 
 // ---- architecture/notes.md agrupa sus secciones por tema, pero su resumen va agrupado por tipo como el de una
-// iniciativa: una Note antes de una Decision rompe el orden
+// iniciativa: una Note antes de un ADR rompe el orden
 {
   const arch = (rows) => `# Architecture — notes
 
@@ -510,8 +516,8 @@ Texto.
 
 Texto.
 `;
-  const ordered = "| ADR1 | Decision | Una decisión | 🟢 Accepted |\n| N1 | Note | Una nota | — |";
-  const swapped = "| N1 | Note | Una nota | — |\n| ADR1 | Decision | Una decisión | 🟢 Accepted |";
+  const ordered = "| ADR1 | ADR | Una decisión | 🟢 Accepted |\n| N1 | Note | Una nota | — |";
+  const swapped = "| N1 | Note | Una nota | — |\n| ADR1 | ADR | Una decisión | 🟢 Accepted |";
   assert.deepEqual(runFixture({ ...VALID, "docs/architecture/notes.md": arch(ordered) }), []);
   expectError({ ...VALID, "docs/architecture/notes.md": arch(swapped) }, /rompe el orden por tipo del resumen/);
 }
@@ -553,8 +559,8 @@ for (const title of ["🟢 Accepted", "🟡 Proposed (2026-09-14)", "⚫ Superse
     `### ADR1 · Una decisión · ${title}`,
   );
   files["docs/fake/notes.md"] = files["docs/fake/notes.md"].replace(
-    "| ADR1 | Decision | Una decisión | 🟢 Accepted |",
-    `| ADR1 | Decision | Una decisión | ${status} |`,
+    "| ADR1 | ADR | Una decisión | 🟢 Accepted |",
+    `| ADR1 | ADR | Una decisión | ${status} |`,
   );
   assert.ok(!runFixture(files).some((e) => /estado de decisión válido/.test(e)), `se rechazó ${title}`);
 }

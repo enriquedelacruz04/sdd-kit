@@ -68,7 +68,7 @@ busca los títulos y los marcadores por su texto, y lee las tablas por la posici
   `## Checklist 1 · Nombre · ⚪ Not run`. Dentro de cada uno, sus secciones (`### A · Nombre`), sus puntos y, al
   final, su tabla `### Findings of checklist N`. Lo que falla fuera de cualquier checklist va en
   `## Findings without checklist`.
-- **`notes.md`**: `## Summary`, `## Decisions`, `## Tech debt`, `## Notes`, `## Runbooks` y `## References`, en ese
+- **`notes.md`**: `## Summary`, `## ADRs`, `## Tech debt`, `## Notes`, `## Runbooks` y `## References`, en ese
   orden. Cada entrada es un título `### ADR1 · Qué · 🟢 Accepted (AAAA-MM-DD)`, `### TD1 · Qué · 🟠 Open`,
   `### N1 · Qué` o `### RB1 · Qué`.
 
@@ -119,7 +119,7 @@ cambian: IDs, reglas, rutas.
 - El roadmap habla de bloqueos entre fases y decisiones, por ID: "`PH3` espera a `PH2` en `Verified`".
 - La publicación aparece solo en `## Execution order` de cada roadmap.
 - `notes.md` abre con un resumen de todo lo que guarda; la sección `## Debt and decisions` del roadmap solo remite
-  ahí. El resumen va agrupado por tipo (`Decision`, `Debt`, `Note`, `Runbook`), en el mismo orden que las
+  ahí. El resumen va agrupado por tipo (`ADR`, `Debt`, `Note`, `Runbook`), en el mismo orden que las
   secciones. `architecture/notes.md` es la excepción a medias: sus secciones son temas, no tipos, pero su
   `## Summary` va igual que en una iniciativa, agrupado por tipo.
 - Todo checklist lleva su tabla `### Findings of checklist N`, aunque esté vacía.
@@ -148,23 +148,23 @@ cambian: IDs, reglas, rutas.
 Las etiquetas —prefijos de ID, estados, severidad, títulos del molde— van en inglés, porque funcionan como
 identificadores. La prosa, en español.
 
-| Término           | ID                       | Qué es / estados                                                                                                                                  | Estándar         |
-| ----------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
-| Initiative        | carpeta `kebab`          | Trabajo de más de una fase o con checklist propio. No es una feature del producto                                                                 | —                |
-| Phase             | `PH1`                    | Unidad que se entrega. ⚪ `Pending` · 🟣 `Designed` · 🔵 `Planned` · 🟡 `Building` · 🟠 `Built` · 🟢 `Verified` · ⚫ `Dropped`                    | —                |
-| Spec              | `AAAA-MM-DD-*-design.md` | Diseño aprobado antes de construir, con criterios de aceptación                                                                                   | Spec (SDD)       |
-| Plan, Task        | `Task n`                 | Pasos ordenados que ejecuta el subagente                                                                                                          | Tasks            |
-| Checklist         | `1`, `2`…                | Verificación de una fase en pantalla, a mano o con un agente. ⚪ `Not run` · 🟡 `Running` · 🟢 `Passed` · 🟠 `Stale`                              | —                |
-| Section           | `A`, `B`…                | Grupo de puntos dentro de un checklist; todo checklist tiene al menos `A`                                                                         | —                |
-| Test case (punto) | `2.B3`                   | Acción, **Expected:** y, si aplica, **Failure to catch:**. ⚪ `Not run` · 🟢 `Passed` · 🔴 `Failed` (con su `F#`) · 🟡 `Blocked` (con su **Blocked:**) | Test case        |
-| Finding           | `F1`                     | Algo que falló o sorprendió al probar. 🔴 `Open` · 🟢 `Fixed` · 🟠 `Deferred (TD#)` · ⚪ `Not a bug`                                              | —                |
-| Severity          | —                        | 🔴 `Critical` · 🟠 `High` · 🟡 `Low`                                                                                                              | —                |
-| Free test         | punto `—`                | Hallazgo que aparece al probar otra cosa, fuera de cualquier punto                                                                                | Exploratory test |
-| Gate              | un checklist             | Paso manual en producción que desbloquea la fase siguiente. Se cruza una vez: nunca pasa a `Stale`                                                | —                |
-| Tech debt         | `TD1`                    | Algo mejorable diferido a sabiendas. 🟠 `Open` · 🟢 `Resolved`. La pagada no se borra: pasa a `Resolved (AAAA-MM-DD)`                             | Tech debt        |
-| Decision          | `ADR1`                   | Elección entre alternativas. 🟡 `Proposed` · 🟢 `Accepted` · ⚫ `Superseded (ADR#)`. Se conserva siempre                                          | ADR              |
-| Note              | `N1`                     | Algo que parece un descuido y no lo es, o una lección                                                                                             | —                |
-| Runbook           | `RB1`                    | Pasos manuales repetibles                                                                                                                         | Runbook          |
+| Término           | ID                       | Qué es                                                                                     | Estados                                                                                          |
+| ----------------- | ------------------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| Initiative        | carpeta `kebab`          | Trabajo de más de una fase o con checklist propio. No es una feature del producto          | —                                                                                                |
+| Phase             | `PH1`                    | Unidad que se entrega                                                                      | ⚪ `Pending` · 🟣 `Designed` · 🔵 `Planned` · 🟡 `Building` · 🟠 `Built` · 🟢 `Verified` · ⚫ `Dropped` |
+| Spec              | `AAAA-MM-DD-*-design.md` | Diseño aprobado antes de construir, con criterios de aceptación                            | —                                                                                                |
+| Plan, Task        | `Task n`                 | Pasos ordenados que ejecuta el subagente                                                   | —                                                                                                |
+| Checklist         | `1`, `2`…                | Verificación de una fase en pantalla, a mano o con un agente                               | ⚪ `Not run` · 🟡 `Running` · 🟢 `Passed` · 🟠 `Stale`                                               |
+| Section           | `A`, `B`…                | Grupo de puntos dentro de un checklist; todo checklist tiene al menos `A`                  | —                                                                                                |
+| Test case (punto) | `2.B3`                   | Acción, **Expected:** y, si aplica, **Failure to catch:**                                  | ⚪ `Not run` · 🟢 `Passed` · 🔴 `Failed` (con su `F#`) · 🟡 `Blocked` (con su **Blocked:**)          |
+| Finding           | `F1`                     | Algo que falló o sorprendió al probar                                                      | 🔴 `Open` · 🟢 `Fixed` · 🟠 `Deferred (TD#)` · ⚪ `Not a bug`                                        |
+| Severity          | —                        | Qué tan grave es un hallazgo. No es un estado: se elige al abrirlo                         | 🔴 `Critical` · 🟠 `High` · 🟡 `Low`                                                                |
+| Exploratory test  | punto `—`                | Hallazgo que aparece al probar otra cosa, fuera de cualquier punto                         | —                                                                                                |
+| Gate              | un checklist             | Paso manual en producción que desbloquea la fase siguiente. Se cruza una vez               | Los de un checklist, menos `Stale`                                                               |
+| Tech debt         | `TD1`                    | Algo mejorable diferido a sabiendas. La pagada no se borra: pasa a `Resolved (AAAA-MM-DD)` | 🟠 `Open` · 🟢 `Resolved`                                                                          |
+| ADR               | `ADR1`                   | Elección entre alternativas. Se conserva siempre                                           | 🟡 `Proposed` · 🟢 `Accepted` · ⚫ `Superseded (ADR#)`                                              |
+| Note              | `N1`                     | Algo que parece un descuido y no lo es, o una lección                                      | —                                                                                                |
+| Runbook           | `RB1`                    | Pasos manuales repetibles                                                                  | —                                                                                                |
 
 ### Estados
 
