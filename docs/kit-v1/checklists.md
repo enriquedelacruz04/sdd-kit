@@ -6,19 +6,17 @@ Necesitan una carpeta vacía fuera de este repo, el `.tgz` que produce `npm pack
 
 | #   | Checklist                  | Phase | Status     | Progress | Last run | Findings |
 | --- | -------------------------- | ----- | ---------- | -------- | -------- | -------- |
-| 1   | Un proyecto nuevo arranca  | PH1   | 🟠 Stale   | 6/6      | 2026-10-06 | 0        |
+| 1   | Un proyecto nuevo arranca  | PH1   | 🟢 Passed  | 6/6      | 2026-10-06 | 0        |
 
 ## Findings
 
 | ID  | Test case | Severity | Summary | Status |
 | --- | --------- | -------- | ------- | ------ |
 
-## Checklist 1 · Un proyecto nuevo arranca · 🟠 Stale
+## Checklist 1 · Un proyecto nuevo arranca · 🟢 Passed
 
 Verifica `PH1` con el paquete instalado de verdad, no con el código del repo: es lo que ningún arnés ve. Se
 repite si cambia lo que entra en el paquete, una plantilla o la línea que importa el método.
-
-**Retake:** `1.A1`, `1.B1`. La versión 2.0.0 cambió la plantilla de `CLAUDE.md` y los pasos 4 y 7 del método.
 
 ### A · Sembrar y vigilar
 
