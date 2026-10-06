@@ -162,6 +162,9 @@ la corrida del 2026-10-05. El vigilante no lo ve: comprueba que los documentos s
 sigan el paso del código. Lo que lo evita es la regla de `CLAUDE.md`: el checklist se marca en el commit que toca
 lo que verifica.
 
+Se puso en regla el 2026-10-06: el checklist pasó a `Stale` y la sección de comandos se volvió a correr entera
+sobre la versión 1.3.0 instalada en un proyecto vacío.
+
 ## Runbooks
 
 ## References
