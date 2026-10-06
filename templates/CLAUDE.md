@@ -7,7 +7,8 @@ suponer, revisa `docs/`**: empieza por `docs/README.md`.
 
 ## Branches
 
-Cuál es la rama de trabajo, cuál la de integración, de la que sale toda rama, y cuál refleja producción.
+Cuál es la rama de trabajo de cada integrante del equipo, de la que sale toda rama; cuál la de integración, a la
+que cada uno mergea la suya, y cuál refleja producción.
 
 ## Environment
 

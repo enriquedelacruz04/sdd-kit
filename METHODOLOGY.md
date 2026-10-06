@@ -16,10 +16,10 @@ verificar.
 | 1. Diseño       | `brainstorming`                                                    | Spec en `docs/superpowers/specs/`, con **criterios de aceptación**                                                                      |
 | 2. Alta docs    | —                                                                  | Se registra la fase: entra al roadmap en `Designed` y su checklist nace en `Not run`, con puntos sacados de los criterios de aceptación |
 | 3. Plan         | `writing-plans`                                                    | Plan en `docs/superpowers/plans/`. Fase: `Planned`                                                                                      |
-| 4. Construcción | `subagent-driven-development`                                      | Rama desde la rama de integración que declara `## Branches` del `CLAUDE.md`. Fase: `Building`                                           |
+| 4. Construcción | `subagent-driven-development`                                      | Rama desde la rama de trabajo de quien la construye, que declara `## Branches` del `CLAUDE.md`. Fase: `Building`                        |
 | 5. Revisión     | `requesting-code-review`                                           | Revisión de la rama entera. Lo diferido, como `TD#` en `notes.md`                                                                       |
 | 6. Verificación | `verification-before-completion`                                   | Los comandos que declara `## Verification` del `CLAUDE.md`, y abrir la pantalla                                                         |
-| 7. Integración  | `finishing-a-development-branch`                                   | Merge a la rama de integración. Fase: `Built`                                                                                           |
+| 7. Integración  | `finishing-a-development-branch`                                   | Merge a la rama de trabajo y, de ella, a la de integración. Fase: `Built` al llegar a la de integración                                 |
 | 8. Checklist    | — (el administrador o un agente; ver "Cómo se corre un checklist") | Cada punto con su estado, y lo que falla, como hallazgo `F#`. Fase: `Verified` cuando sus checklists pasan                              |
 | 9. Publicación  | — (la decide el administrador)                                     | Solo en `## Execution order` del roadmap                                                                                                |
 

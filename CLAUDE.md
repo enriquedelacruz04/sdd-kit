@@ -7,7 +7,8 @@ suponer, revisa `docs/`**: empieza por `docs/README.md`.
 
 ## Branches
 
-- **`main` es la rama de integración**, y de ella sale toda rama de trabajo.
+- **`main` es la rama de trabajo y la de integración**: el kit lo mantiene una sola persona, y de ella sale toda
+  rama.
 - Una versión es un tag `vX.Y.Z` sobre `main`.
 
 ## Environment
