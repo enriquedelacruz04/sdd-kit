@@ -9,6 +9,8 @@
 | ADR3 | Decision | El método se importa desde `node_modules`                                  | 🟢 Accepted |
 | ADR4 | Decision | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
 | ADR5 | Decision | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
+| ADR6 | Decision | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
+| ADR7 | Decision | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
 | TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -16,6 +18,7 @@
 | TD5  | Debt     | El método no dice cómo se marca un checklist como Gate                     | 🟢 Resolved |
 | TD6  | Debt     | Menores de `src/config.js` y `src/io.js`                                   | 🟢 Resolved |
 | N1   | Note     | El corredor de arneses del código no viaja                                 | —           |
+| N2   | Note     | El checklist se quedó en Passed durante cuatro versiones                   | —           |
 
 ## Decisions
 
@@ -56,6 +59,25 @@ npm y son de otras personas. En un proyecto sin el kit instalado, `npx` bajó y 
 El script `check:docs` que se siembra usa el binario local, así que no sale a buscarlo. El precio es una línea de
 import más larga en el `CLAUDE.md` de cada proyecto. Un nombre libre hoy puede registrarlo otro mañana: el kit se
 instala siempre antes de llamarlo.
+
+### ADR6 · Las palabras que no son IDs se declaran en la configuración · 🟢 Accepted (2026-10-05)
+
+**Contexto:** el vigilante lee como cita cualquier palabra con forma de ID, y una tecla de función o un código de
+producto la tienen. **Alternativas:** marcar solo los IDs que existen en la iniciativa, que no pide declarar nada
+pero deja pasar en silencio una cita sin su código a un ID borrado; una marca en el propio texto, que ensucia la
+prosa; o una lista en `sdd.config.mjs`. **Decisión:** la lista, `notIds`. Es explícita y el vigilante no pierde
+nada de lo que detectaba. La versión 1.3.0 la acotó: la palabra solo se ignora en los documentos donde ese ID no
+existe, y nunca dentro de una cita con prefijo, porque una lista global dejaba sin vigilar a un hallazgo real con
+el mismo nombre. Queda un caso sin cubrir: en una iniciativa sin ese ID, la palabra entre acentos graves se toma
+por la tecla aunque se quisiera citar un ID que no existe.
+
+### ADR7 · Un Gate se marca con `**Gate:**` y el vigilante lo comprueba · 🟢 Accepted (2026-10-05)
+
+**Contexto:** el método decía que un Gate nunca pasa a `Stale`, pero un checklist solo decía que lo era en prosa
+libre, y nada lo comprobaba. **Alternativas:** dejarlo en prosa; una columna nueva en el resumen de los checklists,
+que cambia una tabla que el vigilante lee por posición; o un párrafo con marcador en la introducción, como
+`**Retake:**`. **Decisión:** el párrafo `**Gate:**`, que nombra qué desbloquea. No toca ninguna tabla, se lee
+donde se describe el checklist, y con la marca el vigilante falla si el checklist pasa a `Stale`.
 
 ## Tech debt
 
@@ -130,6 +152,15 @@ configuración, una carpeta existe en los dos accesos, `walk` recursa sin `this`
 El kit vigila `docs/` y nada más. El corredor que bundlea y ejecuta los arneses del código de Cappi es una
 decisión de verificación de ese proyecto: cada proyecto declara sus comandos en `## Verification` de su
 `CLAUDE.md`. Parece un olvido y no lo es.
+
+### N2 · El checklist se quedó en Passed durante cuatro versiones
+
+Las versiones 1.0.2 a 1.3.0 cambiaron la salida de los comandos, la validación de `ignore` y los mensajes del
+vigilante, que es lo que comprueba la sección de comandos del checklist, y ninguno de esos commits lo pasó a
+`Stale`. Cada cambio se probó a mano en un proyecto temporal, pero el documento siguió diciendo `Passed` sobre
+la corrida del 2026-10-05. El vigilante no lo ve: comprueba que los documentos sean coherentes entre sí, no que
+sigan el paso del código. Lo que lo evita es la regla de `CLAUDE.md`: el checklist se marca en el commit que toca
+lo que verifica.
 
 ## Runbooks
 
