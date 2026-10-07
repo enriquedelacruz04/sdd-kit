@@ -1,6 +1,6 @@
 {
   "name": "@enriquedelacruz04/sdd-kit",
-  "version": "5.0.1",
+  "version": "6.0.0",
   "description": "Spec Driven Development: las reglas, el molde de docs/ y el vigilante que lo comprueba",
   "type": "module",
   "bin": { "sddkit": "bin/sdd.js" },

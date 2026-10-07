@@ -14,6 +14,7 @@
 | ADR8  | ADR      | El tipo y la sección de una decisión se llaman `ADR`, como su prefijo      | 🟢 Accepted |
 | ADR9  | ADR      | Una cita dentro de la iniciativa no nombra el archivo                      | 🟢 Accepted |
 | ADR10 | ADR      | El agente prueba todo lo que alcanza y nadie revisa su diff                | 🟢 Accepted |
+| ADR11 | ADR      | `Built` llega con el merge a la rama de trabajo, no con la integración     | 🟢 Accepted |
 | TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -117,6 +118,18 @@ captura de pantalla, abre el archivo descargado y emula la vista de teléfono; p
 escribir antes de empezar, y sin él no escribe; y el administrador solo prueba lo que el agente le deja en
 `Not run`. El precio: lo que el agente marca `Passed` y los hallazgos que abre entran al commit sin que nadie
 los revise, con su reporte como único resumen, y una vista emulada no es un teléfono real.
+
+### ADR11 · `Built` llega con el merge a la rama de trabajo, no con la integración · 🟢 Accepted (2026-10-07)
+
+**Contexto:** el paso 7 mergeaba la fase a la rama de trabajo y, de ella, a la de integración, y la fase no
+pasaba a `Built` hasta llegar a la segunda. Como el checklist se corre con la fase en `Built`, nada se podía
+probar sin haberlo integrado antes. **Alternativas:** dejarlo, como todavía decía la 5.0.0; pasar a `Built` en la
+rama de trabajo y fijar la integración al llegar a `Verified`, que solo deja subir lo probado pero le impone a
+todo proyecto un mismo momento para integrar; o pasar a `Built` en la rama de trabajo y que el método no diga
+cuándo se integra. **Decisión:** la última. El paso 7 termina en la rama de trabajo, y cuándo sube a la de
+integración lo declara cada proyecto en `## Branches` de su `CLAUDE.md`. El precio: el método ya no garantiza
+que quien corre el checklist tenga el código de la fase. Si no la construyó él, la trae antes a su rama de
+trabajo, y un proyecto que no declare cuándo integra se queda sin regla.
 
 ## Tech debt
 

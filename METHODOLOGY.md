@@ -19,7 +19,7 @@ verificar.
 | 4. Construcción | `subagent-driven-development`                                      | Rama desde la rama de trabajo de quien la construye, que declara `## Branches` del `CLAUDE.md`. Fase: `Building`                        |
 | 5. Revisión     | `requesting-code-review`                                           | Revisión de la rama entera. Lo diferido, como `TD#` en `notes.md`                                                                       |
 | 6. Verificación | `verification-before-completion`                                   | Los comandos que declara `## Verification` del `CLAUDE.md`, y abrir la pantalla                                                         |
-| 7. Integración  | `finishing-a-development-branch`                                   | Merge a la rama de trabajo y, de ella, a la de integración. Fase: `Built` al llegar a la de integración                                 |
+| 7. Integración  | `finishing-a-development-branch`                                   | Merge a la rama de trabajo. Fase: `Built`. Cuándo sube a la de integración lo declara `## Branches` del `CLAUDE.md`                     |
 | 8. Checklist    | — (el administrador o un agente; ver "Cómo se corre un checklist") | Cada punto con su estado, y lo que falla, como hallazgo `F#`. Fase: `Verified` cuando sus checklists pasan                              |
 | 9. Publicación  | — (la decide el administrador)                                     | Solo en `## Execution order` del roadmap                                                                                                |
 
@@ -219,9 +219,8 @@ Qué estados tiene cada término está en el glosario. Aquí va cómo se escribe
 ## Cómo se corre un checklist
 
 Un checklist se corre cuando su fase está en `Built`. Se corre sobre la rama de trabajo de quien lo corre, la
-que declara `## Branches` del `CLAUDE.md`, después de traerle todo lo que tenga la rama de integración: así se
-prueba el código que de verdad se integró. Lo corre el administrador o un agente que maneja el navegador con un
-MCP; un Gate, solo el administrador.
+que declara `## Branches` del `CLAUDE.md`, con la fase ya en ella. Lo corre el administrador o un agente que
+maneja el navegador con un MCP; un Gate, solo el administrador.
 
 Cada cambio de estado se escribe en todos los sitios donde aparece: el de un checklist, en su título y en el
 resumen de los checklists; el de una fase, en el roadmap: en su título, en el índice de fases y, si lo que dice

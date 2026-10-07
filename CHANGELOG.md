@@ -4,6 +4,18 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 6.0.0
+
+Cambia una regla del método: la fase pasa a `Built` con el merge a la rama de trabajo (paso 7), sin esperar a
+llegar a la rama de integración (`kit-v1` `ADR11`). El método ya no dice cuándo sube la rama de trabajo a la de
+integración: lo declara cada proyecto en `## Branches` de su `CLAUDE.md`, y la plantilla lo pide. El checklist
+se sigue corriendo sobre la rama de trabajo de quien lo corre, con la fase ya en ella, pero ya no pide traerle
+antes lo que tenga la rama de integración: integrar es trabajo y decisión del administrador.
+
+**Migración:** el vigilante no cambia y ningún documento deja de pasar. Cada proyecto escribe en `## Branches`
+de su `CLAUDE.md` cuándo se mergea la rama de trabajo a la de integración. Si quien corre el checklist no es
+quien construyó la fase, trae antes esa fase a su rama de trabajo.
+
 ## 5.0.1
 
 El vigilante ve la cita que nombra el archivo aunque el ajuste de línea la parta: `` `notes.md` `` al final de una
