@@ -4,6 +4,12 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 5.0.1
+
+El vigilante ve la cita que nombra el archivo aunque el ajuste de línea la parta: `` `notes.md` `` al final de una
+línea y el ID al principio de la siguiente pasaban sin error. Apareció al migrar el admin de Cappi a la 5.0.0,
+donde cuatro citas con esa forma quedaron sin señalar.
+
 ## 5.0.0
 
 Una cita a un ID de la misma iniciativa ya no nombra el archivo: se escribe (`N3`), no (`notes.md` `N3`). El

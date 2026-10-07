@@ -397,6 +397,16 @@ expectError(
   withDefect("CLAUDE.md", "Empieza por `docs/README.md`.", "Empieza por `docs/README.md` (`notes.md` `N1`)."),
   /CLAUDE\.md:\d+: la cita nombra el archivo/,
 );
+// El ajuste de línea puede partir la cita: el archivo al final de una línea y el ID al principio de la siguiente.
+expectError(
+  withDefect("docs/fake/roadmap.md", "(`N1`)", "(`notes.md`\n  `N1`)"),
+  /roadmap\.md:\d+: la cita nombra el archivo/,
+);
+// Nombrar el archivo al final de una línea no es una cita si lo que sigue no es un ID.
+assert.deepEqual(
+  runFixture(withDefect("docs/fake/roadmap.md", "(`N1`)", "(`N1`), y el detalle está en `notes.md`\n\nOtro párrafo.")),
+  [],
+);
 
 // ---- una iniciativa puede traer una carpeta `assets` con las imágenes que su spec cita: no es un archivo ajeno
 {

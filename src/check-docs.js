@@ -45,6 +45,9 @@ const DEFINED = {
   "notes.md": [/^### ((?:ADR|TD|N|RB)\d+) · /gm],
 };
 const FILE_CITE = new RegExp(String.raw`\x60(?:notes|roadmap|checklists)\.md\x60\s+\x60${ID}\x60`);
+// La misma cita partida por el ajuste de línea: el archivo cierra una línea y el ID abre la siguiente.
+const FILE_CITE_TAIL = /\x60(?:notes|roadmap|checklists)\.md\x60\s*$/;
+const FILE_CITE_HEAD = new RegExp(String.raw`^\s*\x60${ID}\x60`);
 const CODE_ID = new RegExp(String.raw`\x60(${ID})\x60`, "g");
 const STATE_ID = /(?:Deferred|Superseded) \(((?:TD|ADR)\d+)\)/g;
 const README_STATES = /\b(Pending|Designed|Planned|Building|Built|Verified|Dropped)\b/;
@@ -188,7 +191,7 @@ export function checkDocs(io, userConfig = {}) {
   const checkCitations = (file, rawText, home) => {
     const text = withoutNotIds(rawText, home);
     let fence = false;
-    text.split("\n").forEach((line, i) => {
+    text.split("\n").forEach((line, i, lines) => {
       if (line.startsWith("```")) {
         fence = !fence;
         return;
@@ -196,7 +199,7 @@ export function checkDocs(io, userConfig = {}) {
       if (fence) return;
       if (ONE_SPAN_CITE.test(line))
         fail(`${file}:${i + 1}: iniciativa e ID en un solo código: ${line.trim().slice(0, 90)}`);
-      if (FILE_CITE.test(line))
+      if (FILE_CITE.test(line) || (FILE_CITE_TAIL.test(line) && FILE_CITE_HEAD.test(lines[i + 1] ?? "")))
         fail(`${file}:${i + 1}: la cita nombra el archivo, y el prefijo del ID ya dice dónde vive: ${line.trim().slice(0, 90)}`);
       let work = line
         .replace(/^#{2,4} (?:PH\d+|Checklist \d+|(?:ADR|TD|N|RB)\d+|[A-Z]) · /, "")
