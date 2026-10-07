@@ -12,6 +12,7 @@
 | ADR6 | ADR      | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
 | ADR7 | ADR      | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
 | ADR8 | ADR      | El tipo y la sección de una decisión se llaman `ADR`, como su prefijo      | 🟢 Accepted |
+| ADR9 | ADR      | Una cita dentro de la iniciativa no nombra el archivo                      | 🟢 Accepted |
 | TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -91,6 +92,16 @@ mayor, la 3.0.0: cada proyecto reescribe esa columna y ese título en sus `notes
 
 La versión 4.0.0 llevó la misma palabra al roadmap, cuya sección pasa a titularse `## Debt and ADRs`. Se
 decidió con la 3.0.0 ya etiquetada, y por eso es otra versión mayor.
+
+### ADR9 · Una cita dentro de la iniciativa no nombra el archivo · 🟢 Accepted (2026-10-07)
+
+**Contexto:** el método pedía citar con el nombre del archivo un ID de otro archivo de la misma iniciativa, pero
+el prefijo del ID ya dice en cuál vive: `PH` en `roadmap.md`, `F` y los puntos en `checklists.md`, y el resto en
+`notes.md`. El vigilante, además, no lo exigía: un ID sin archivo ya pasaba. **Alternativas:** dejarlo; quitarlo
+del método y seguir aceptando la forma vieja, que no obliga a nadie a tocar sus documentos pero deja dos formas
+válidas de la misma cita; o rechazarla. **Decisión:** el vigilante la rechaza, para que la cita tenga una sola
+forma: el ID solo dentro de su iniciativa, y con la carpeta delante si es de otra. El precio es una versión
+mayor, la 5.0.0: cada proyecto borra el nombre del archivo de esas citas.
 
 ## Tech debt
 

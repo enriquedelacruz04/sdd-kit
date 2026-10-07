@@ -66,8 +66,8 @@ busca los títulos y los marcadores por su texto, y lee las tablas por la posici
   un título por fase con la forma `## PH1 · Nombre · 🟣 Designed`.
 - **`checklists.md`**: `## Checklists summary`, `## Findings` y, debajo, un título por checklist con la forma
   `## Checklist 1 · Nombre · ⚪ Not run`. Dentro de cada uno, sus secciones (`### A · Nombre`), sus puntos y, al
-  final, su tabla `### Findings of checklist N`. Lo que falla fuera de cualquier checklist va en
-  `## Findings without checklist`.
+  final, su tabla `### Findings of checklist N`. Un fallo que aparece sin estar corriendo ningún checklist —al
+  programar o al usar la aplicación— va en `## Findings without checklist`.
 - **`notes.md`**: `## Summary`, `## ADRs`, `## Tech debt`, `## Notes`, `## Runbooks` y `## References`, en ese
   orden. Cada entrada es un título `### ADR1 · Qué · 🟢 Accepted (AAAA-MM-DD)`, `### TD1 · Qué · 🟠 Open`,
   `### N1 · Qué` o `### RB1 · Qué`.
@@ -168,28 +168,46 @@ identificadores. La prosa, en español.
 
 ### Estados
 
-- Se escriben con su emoji delante y la etiqueta detrás —`🟢 Verified`, nunca el emoji solo—, en tablas, en
-  títulos y detrás del ID de cada punto (`- **2.B3** · 🟡 Blocked · …`): la palabra se busca con Ctrl+F y no
-  depende de distinguir colores.
-- El estado de cada punto dice qué se probó de un checklist a medias. En `Passed` o en `Not run`, el checklist
-  tiene todos sus puntos igual; la columna `Progress` de su resumen cuenta los puntos en `Passed` sobre el total.
-  Un punto `Blocked` no se pudo probar y dice por qué con **Blocked:**; uno `Failed` tiene un hallazgo que lo
+Qué estados tiene cada término está en el glosario. Aquí va cómo se escriben y qué exige cada uno.
+
+**En cualquier documento:**
+
+- Un estado se escribe con su emoji delante y su etiqueta detrás: `🟢 Verified`, nunca el emoji solo. Así va en
+  tablas, en títulos y detrás del ID de cada punto (`- **2.B3** · 🟡 Blocked · …`). La palabra se busca con
+  Ctrl+F y no depende de distinguir colores.
+- Los colores significan lo mismo en todos los términos: verde es terminado, amarillo en marcha o por decidir,
+  naranja hecho a medias, rojo un problema, blanco sin empezar y negro que ya no aplica.
+
+**En `checklists.md`, los de un checklist y sus puntos:**
+
+- Un checklist en `Passed` tiene todos sus puntos en `Passed`, y uno en `Not run`, todos en `Not run`. En
+  `Running` o en `Stale`, el estado de cada punto dice qué se probó.
+- La columna `Progress` del resumen cuenta los puntos en `Passed` sobre el total.
+- Un punto `Blocked` no se pudo probar y dice por qué con **Blocked:**; uno `Failed` tiene un hallazgo que lo
   cita.
-- Verde es terminado, amarillo en marcha o por decidir, naranja hecho a medias, rojo un problema, blanco sin
-  empezar y negro que ya no aplica.
-- Una fase está en `Verified` solo si todos sus checklists están en `Passed`. Si uno deja de estarlo, porque
-  pasó a `Stale`, la fase regresa a `Built` en el mismo commit, y vuelve a `Verified` cuando el checklist vuelve
-  a `Passed`.
+
+**En `roadmap.md`, los de una fase:**
+
+- Una fase está en `Verified` solo si todos sus checklists están en `Passed`. Si uno pasa a `Stale`, la fase
+  regresa a `Built` en el mismo commit, y vuelve a `Verified` cuando el checklist vuelve a `Passed`.
 
 ### IDs
 
 - Son secuenciales dentro de su iniciativa (`architecture/notes.md` cuenta como una) y **nunca se reutilizan**,
   aunque la entrada se borre.
-- Se citan con cada pieza en su propio código. Como aparte, entre paréntesis y según dónde viva la entrada: otra
-  iniciativa (`billing` `N34`), otro archivo de la misma iniciativa (`notes.md` `N3`), el mismo archivo (`N11`),
-  y varios IDs separados por coma (`architecture` `N20`, `N21`).
-- Cuando el ID es parte de la frase va sin paréntesis, con el mismo prefijo si es de otro archivo: "Verifica
-  `PH1`", "lo cubre `architecture` `N7`". Sin anclas de Markdown, que se rompen al cambiar un título.
+- Se citan con cada pieza en su propio código. Dentro de su iniciativa el ID va solo, esté en el archivo que
+  esté; el de otra iniciativa lleva delante su carpeta:
+
+  | Dónde vive la entrada | Como aparte       | Dentro de la frase             |
+  | --------------------- | ----------------- | ------------------------------ |
+  | La misma iniciativa   | (`N11`)           | "Verifica `PH1`"               |
+  | Otra iniciativa       | (`billing` `N34`) | "lo cubre `architecture` `N7`" |
+
+- El archivo no se nombra en la cita, porque el prefijo ya dice cuál es: `PH` vive en `roadmap.md`; `F` y los
+  puntos (`2.B3`), en `checklists.md`; `ADR`, `TD`, `N` y `RB`, en `notes.md`.
+
+- Varios IDs del mismo sitio se separan por coma: (`architecture` `N20`, `N21`).
+- Sin anclas de Markdown, que se rompen al cambiar un título.
 - Una fase renombrada conserva su nombre viejo en la columna `Old name` del índice de fases.
 - Las specs y los planes no llevan IDs: se citan por su nombre de archivo, y un apartado suyo, por su título
   (`2026-09-04-pivot-tables-design.md`, apartado "Alcance"). Es la única cita entre documentos que no va por ID.
@@ -200,8 +218,10 @@ identificadores. La prosa, en español.
 
 ## Cómo se corre un checklist
 
-Un checklist se corre sobre la rama de integración, cuando su fase está en `Built`. Lo corre el administrador o
-un agente que maneja el navegador con un MCP; un Gate, solo el administrador.
+Un checklist se corre cuando su fase está en `Built`. Se corre sobre la rama de trabajo de quien lo corre, la
+que declara `## Branches` del `CLAUDE.md`, después de traerle todo lo que tenga la rama de integración: así se
+prueba el código que de verdad se integró. Lo corre el administrador o un agente que maneja el navegador con un
+MCP; un Gate, solo el administrador.
 
 El agente lee esta sección entera antes de empezar. Su prompt trae solo los datos de la corrida, no reglas: qué
 checklists y, si ya se saben, la URL de la aplicación, con qué datos probar y si autoriza escrituras.
@@ -258,6 +278,9 @@ Lleva el siguiente `F#` de la iniciativa y va en dos tablas, las dos en `🔴 Op
   `How it was closed`.
 - **En el índice `## Findings`**: el mismo punto y la misma severidad, y un resumen de una línea.
 
+Un fallo que aparece sin estar corriendo ningún checklist se abre igual, con `## Findings without checklist` en
+el lugar de la tabla del checklist y una raya (`—`) en `Test case`.
+
 Si el punto ya tenía un hallazgo por ese fallo, no se abre otro mientras siga en `Open`. Si estaba en `Fixed`, el
 arreglo no bastó: el hallazgo nuevo lo dice y cita al anterior.
 
@@ -269,40 +292,47 @@ La severidad es una de tres:
 
 ### Lo que cambia para un agente
 
-- **El navegador y la aplicación.** Antes que nada, confirma que el MCP del navegador responde, que el repo está
-  en la rama de integración y que el `checklists.md` y el roadmap de la iniciativa no tienen cambios sin commit.
-  Usa la aplicación de la URL del prompt; si no hay, reusa la que ya esté corriendo o la levanta en segundo plano
-  con el comando que declara el `CLAUDE.md`. Si algo de esto falla, se detiene y lo avisa, sin probar con otro
-  navegador, cambiar de rama ni tocar esos cambios.
-- **La sesión.** Usa la sesión que guarda el perfil del navegador del MCP, y nunca pide ni escribe una contraseña.
-  Si la página cae en la pantalla de acceso, o un punto pide otro rol, le pide al administrador que entre en esa
-  ventana; los puntos de otro rol los deja para el final.
-- **Prueba como una persona.** Hace clic, elige opciones, escribe en los campos y mira el resultado. No sustituye
-  la acción con un script en la página ni con una lectura de la base de datos, salvo que el **Expected:** pida
-  justo eso.
-- **Solo prueba lo que puede comprobar entero.** Un punto que pide un juicio visual, revisar un archivo
-  descargado o la aplicación en un teléfono, lo deja en `⚪ Not run` para el administrador, nunca en `Blocked`.
-- **Solo lee.** Abre, filtra y descarga, pero no crea, guarda ni borra nada, salvo que el administrador lo
-  autorice en el prompt o al responder sus preguntas. Entonces usa registros de prueba que se reconozcan por su
-  nombre y los borra al terminar. Un punto que necesita escribir sin autorización se queda en `Not run`.
-- **Pregunta antes de empezar.** Entre los pasos 2 y 3, busca en la aplicación lo que piden los puntos que va a
-  probar y le manda al administrador un solo mensaje, aunque no le falte nada: qué le falta y qué puntos lo
-  necesitan (requisitos, datos, una cuenta con otro rol, permiso para escribir), qué puntos le deja y por qué, y
-  qué checklists no correrá porque están en `Passed` o son un Gate. Espera la respuesta: lo que el administrador
-  dice que no existe deja sus puntos en `Blocked`, con eso en su **Blocked:**, y lo que prefiere probar él, en
+- **El navegador y la aplicación.** Antes que nada, confirma tres cosas: que el MCP del navegador responde, que
+  el repo está en la rama de trabajo de quien lo lanzó, y que el `checklists.md` y el roadmap de la iniciativa no
+  tienen cambios sin commit. Usa la aplicación de la URL del prompt; si no hay, la que ya esté corriendo, o la
+  levanta en segundo plano con el comando que declara el `CLAUDE.md`. Si algo de esto falla, se detiene y avisa:
+  no prueba con otro navegador, no cambia de rama ni toca esos cambios.
+- **La sesión.** Usa la sesión que guarda el perfil del navegador del MCP; nunca pide ni escribe una contraseña.
+  Si cae en la pantalla de acceso o un punto pide otro rol, le pide al administrador que entre en esa ventana.
+  Los puntos de otro rol van al final.
+- **Prueba como una persona.** Hace clic, escribe en los campos y mira el resultado. No cambia la acción por un
+  script en la página ni por una lectura de la base de datos, salvo que el **Expected:** lo pida.
+- **Prueba todo lo que está a su alcance.** Un juicio visual lo hace sobre una captura de pantalla, un archivo
+  descargado lo abre, y la vista de teléfono la emula en el navegador. Lo que aun así no puede comprobar entero
+  lo deja en `⚪ Not run`, nunca en `Blocked`, y dice qué intentó.
+- **Escribe solo con permiso, y lo pide siempre.** Para crear, guardar o borrar necesita que el administrador lo
+  autorice. Si un punto lo necesita y el prompt no lo autoriza, pide el permiso antes de empezar. Con él, usa
+  registros de prueba que se reconozcan por su nombre y los borra al terminar; sin él, el punto se queda en
   `Not run`.
-- **Decide solo.** Marca `Passed`, pasa la fase a `Verified` cuando le toca (paso 6) y abre hallazgos sin pedir
-  confirmación. Si duda de que un punto se cumpla, lo deja en `Not run` y explica por qué.
+- **Pregunta antes de empezar.** Entre los pasos 2 y 3, busca en la aplicación lo que piden los puntos que va a
+  probar y le manda al administrador un solo mensaje, aunque no le falte nada, con:
+  - qué le falta y qué puntos lo necesitan: requisitos, datos, una cuenta con otro rol, permiso para escribir;
+  - qué puntos le deja y por qué;
+  - qué checklists no correrá, por estar en `Passed` o ser un Gate.
+
+  Espera la respuesta. Lo que el administrador dice que no existe deja sus puntos en `Blocked`, con eso en su
+  **Blocked:**; lo que prefiere probar él, en `Not run`.
+
+- **Decide solo.** Marca `Passed`, abre hallazgos y pasa la fase a `Verified` cuando toca (paso 6), sin pedir
+  confirmación. Si duda de un punto, lo deja en `Not run` y explica por qué.
 - **Solo edita el `checklists.md` y el roadmap de la iniciativa, y no hace commit.** Un fallo se registra como
   hallazgo; el código no se toca.
-- **Al terminar**, apaga la aplicación si la levantó él y reporta qué puntos probó y cómo salieron, qué hallazgos
-  abrió, qué fases pasó a `Verified`, qué dejó en `Blocked` o en `Not run` y por qué, qué registros de prueba
-  creó y si los borró, y si `npm run check:docs` pasó.
+- **Al terminar**, apaga la aplicación si la levantó él y reporta:
+  - qué puntos probó y cómo salieron;
+  - qué hallazgos abrió y qué fases pasó a `Verified`;
+  - qué dejó en `Blocked` o en `Not run`, y por qué;
+  - qué registros de prueba creó y si los borró;
+  - si `npm run check:docs` pasó.
 
 ### Cuando el agente termina
 
-El administrador revisa el diff contra el reporte del agente y corrige lo que no le convenza. Luego prueba los
-puntos que el agente le dejó en `Not run`, si los hay (pasos 4 a 6), y termina con el paso 7.
+El administrador prueba los puntos que el agente le dejó en `Not run`, si los hay (pasos 4 a 6), y termina con
+el paso 7.
 
 ### Cuando un hallazgo se cierra
 

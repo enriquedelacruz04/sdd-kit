@@ -44,6 +44,7 @@ const DEFINED = {
   "checklists.md": [/^- \*\*(\d+\.[A-Z]\d+)\*\*/gm, /^\|\s*`?(F\d+)`?\s*\|/gm],
   "notes.md": [/^### ((?:ADR|TD|N|RB)\d+) · /gm],
 };
+const FILE_CITE = new RegExp(String.raw`\x60(?:notes|roadmap|checklists)\.md\x60\s+\x60${ID}\x60`);
 const CODE_ID = new RegExp(String.raw`\x60(${ID})\x60`, "g");
 const STATE_ID = /(?:Deferred|Superseded) \(((?:TD|ADR)\d+)\)/g;
 const README_STATES = /\b(Pending|Designed|Planned|Building|Built|Verified|Dropped)\b/;
@@ -114,18 +115,15 @@ export function checkDocs(io, userConfig = {}) {
 
   const INI = `(?:${["architecture", ...initiatives].map(escapeRe).join("|")})`;
   const ONE_SPAN_CITE = new RegExp(String.raw`\x60${INI} ${ID}\x60`);
-  // `iniciativa` o `archivo.md` seguido de uno o varios IDs separados por coma.
-  const CITE_GROUP = new RegExp(
-    String.raw`\x60(${INI}|notes\.md|roadmap\.md|checklists\.md)\x60((?:\s+\x60${ID}\x60)(?:\s*,\s*\x60${ID}\x60)*)`,
-    "g",
-  );
+  // `iniciativa` seguida de uno o varios IDs separados por coma.
+  const CITE_GROUP = new RegExp(String.raw`\x60(${INI})\x60((?:\s+\x60${ID}\x60)(?:\s*,\s*\x60${ID}\x60)*)`, "g");
   // Una tecla de función o un código de producto tienen forma de ID sin serlo: el proyecto los declara y aquí se
   // borran del texto antes de buscar citas, sueltos o entre acentos graves. Solo donde ese ID no existe: en una
   // iniciativa que sí tiene un F5, "F5" es su hallazgo, y borrarlo dejaría sus citas sin vigilar.
   for (const word of config.notIds)
     if (!new RegExp(`^${ID}$`).test(word)) fail(`${CONFIG_FILE}: "${word}" en notIds no tiene forma de ID`);
   const withoutNotIds = (text, home) => {
-    const words = config.notIds.filter((word) => !registry.get(home)?.all.has(word));
+    const words = config.notIds.filter((word) => !registry.get(home)?.has(word));
     if (!words.length) return text;
     return text.replace(
       new RegExp(String.raw`\x60?(?<![\w.#/\-])(?:${words.map(escapeRe).join("|")})(?!\w)\x60?`, "g"),
@@ -185,7 +183,8 @@ export function checkDocs(io, userConfig = {}) {
       .join("\n");
   };
 
-  // Una cita a un ID lleva cada pieza en su propio código: (`iniciativa` `N3`), (`notes.md` `N3`), (`N3`).
+  // Una cita a un ID lleva cada pieza en su propio código: (`iniciativa` `N3`) o (`N3`). El archivo no se nombra:
+  // el prefijo del ID ya dice en cuál vive.
   const checkCitations = (file, rawText, home) => {
     const text = withoutNotIds(rawText, home);
     let fence = false;
@@ -197,6 +196,8 @@ export function checkDocs(io, userConfig = {}) {
       if (fence) return;
       if (ONE_SPAN_CITE.test(line))
         fail(`${file}:${i + 1}: iniciativa e ID en un solo código: ${line.trim().slice(0, 90)}`);
+      if (FILE_CITE.test(line))
+        fail(`${file}:${i + 1}: la cita nombra el archivo, y el prefijo del ID ya dice dónde vive: ${line.trim().slice(0, 90)}`);
       let work = line
         .replace(/^#{2,4} (?:PH\d+|Checklist \d+|(?:ADR|TD|N|RB)\d+|[A-Z]) · /, "")
         .replace(/^- \*\*\d+\.[A-Z]\d+\*\* · /, "");
@@ -215,29 +216,23 @@ export function checkDocs(io, userConfig = {}) {
   // iniciativa del archivo: sin ella (CLAUDE.md) un ID sin prefijo es un ejemplo, no una cita.
   const registry = new Map();
   const register = (name, files) => {
-    const entry = { all: new Set() };
-    for (const f of files) {
-      entry[f] = new Set();
-      for (const re of DEFINED[f])
-        for (const m of read(`docs/${name}/${f}`).matchAll(re)) {
-          entry[f].add(m[1]);
-          entry.all.add(m[1]);
-        }
-    }
-    registry.set(name, entry);
+    const all = new Set();
+    for (const f of files)
+      for (const re of DEFINED[f]) for (const m of read(`docs/${name}/${f}`).matchAll(re)) all.add(m[1]);
+    registry.set(name, all);
   };
   const checkRefs = (file, rawText, home) => {
     const missing = (cite) => fail(`${file}: cita ${cite}, que no existe`);
-    // Las citas con prefijo se comprueban sobre el texto entero: nombran la iniciativa o el archivo, así que una
-    // palabra de `notIds` ahí dentro es un ID de verdad.
+    // Las citas con prefijo se comprueban sobre el texto entero: nombran la iniciativa, así que una palabra de
+    // `notIds` ahí dentro es un ID de verdad.
     const unprefixed = rawText.replace(/^```[\s\S]*?^```/gm, "").replace(CITE_GROUP, (_, prefix, list) => {
-      const bag = prefix.endsWith(".md") ? home && registry.get(home)?.[prefix] : registry.get(prefix)?.all;
+      const bag = registry.get(prefix);
       if (bag) for (const [, id] of list.matchAll(CODE_ID)) if (!bag.has(id)) missing(`\`${prefix}\` \`${id}\``);
       return "";
     });
     if (!home) return;
     const rest = withoutNotIds(unprefixed, home);
-    const bag = registry.get(home).all;
+    const bag = registry.get(home);
     for (const [, id] of [...rest.matchAll(CODE_ID), ...rest.matchAll(STATE_ID)]) if (!bag.has(id)) missing(id);
   };
 

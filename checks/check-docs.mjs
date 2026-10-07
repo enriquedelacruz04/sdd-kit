@@ -67,7 +67,7 @@ El resumen y el detalle están en \`notes.md\`.
 
 ## PH1 · Algo · 🟢 Verified
 
-Construye algo; lo explica (\`notes.md\` \`N1\`).
+Construye algo; lo explica (\`N1\`).
 `,
   "docs/fake/checklists.md": `# Fake — checklists
 
@@ -377,7 +377,7 @@ expectError(
 );
 
 // ---- las citas llevan cada pieza en su propio código; el formato viejo vuelve a mezclar estilos
-expectError(withDefect("docs/fake/roadmap.md", "(`notes.md` `N1`)", "(N1 en `notes.md`)"), /N1 citado sin su código/);
+expectError(withDefect("docs/fake/roadmap.md", "(`N1`)", "(N1 en `notes.md`)"), /N1 citado sin su código/);
 expectError(
   withDefect("docs/fake/notes.md", "Sale de (`ADR1`).", "Sale de `architecture N7`."),
   /iniciativa e ID en un solo código/,
@@ -385,15 +385,17 @@ expectError(
 expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1;"), /PH1 citado sin su código/);
 
 // ---- una cita a un ID que no existe —borrado, o mal escrito— remite a nada y se sigue leyendo como cierta
-expectError(
-  withDefect("docs/fake/roadmap.md", "(`notes.md` `N1`)", "(`notes.md` `N9`)"),
-  /cita `notes\.md` `N9`, que no existe/,
-);
+expectError(withDefect("docs/fake/roadmap.md", "(`N1`)", "(`N9`)"), /cita N9, que no existe/);
 expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica `PH7`;"), /cita PH7, que no existe/);
-// El archivo cuenta: N1 existe en la iniciativa, pero no en checklists.md.
+
+// ---- dentro de la iniciativa el ID va solo: nombrar el archivo repite lo que el prefijo ya dice
 expectError(
-  withDefect("docs/fake/roadmap.md", "(`notes.md` `N1`)", "(`checklists.md` `N1`)"),
-  /cita `checklists\.md` `N1`, que no existe/,
+  withDefect("docs/fake/roadmap.md", "(`N1`)", "(`notes.md` `N1`)"),
+  /roadmap\.md:\d+: la cita nombra el archivo/,
+);
+expectError(
+  withDefect("CLAUDE.md", "Empieza por `docs/README.md`.", "Empieza por `docs/README.md` (`notes.md` `N1`)."),
+  /CLAUDE\.md:\d+: la cita nombra el archivo/,
 );
 
 // ---- una iniciativa puede traer una carpeta `assets` con las imágenes que su spec cita: no es un archivo ajeno

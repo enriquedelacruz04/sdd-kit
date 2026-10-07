@@ -4,6 +4,23 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 5.0.0
+
+Una cita a un ID de la misma iniciativa ya no nombra el archivo: se escribe (`N3`), no (`notes.md` `N3`). El
+prefijo del ID ya dice dónde vive, y el vigilante falla si la cita lleva `notes.md`, `roadmap.md` o
+`checklists.md` delante. La carpeta sigue yendo delante de un ID de otra iniciativa.
+
+Cambia además una regla del método: un checklist se corre sobre la rama de trabajo de quien lo corre, al día con
+la de integración, no sobre la rama de integración. El agente comprueba esa rama antes de empezar. La fase sigue
+pasando a `Built` al llegar a la rama de integración (paso 7).
+
+"Estados" e "IDs" se reescriben: los puntos de "Estados" van agrupados por el documento del que hablan y cada uno
+dice una sola cosa, y las formas de citar un ID van en una tabla.
+
+**Migración:** en `docs/` y en el `CLAUDE.md`, toda cita con la forma `` `notes.md` `N3` `` pierde el nombre del
+archivo y queda en `` `N3` ``; el vigilante nombra cada línea que la lleva. Quien corre un checklist, o lanza al
+agente que lo corre, lo hace desde su rama de trabajo.
+
 ## 4.0.0
 
 La sección del roadmap que remite a `notes.md` se titula `## Debt and ADRs`, no `## Debt and decisions`. Completa
