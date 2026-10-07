@@ -17,8 +17,8 @@ que son las de ese proyecto.
 
 ## Comandos
 
-| Comando                | Qué hace                                                                    |
-| ---------------------- | --------------------------------------------------------------------------- |
+| Comando                   | Qué hace                                                                    |
+| ------------------------- | --------------------------------------------------------------------------- |
 | `sddkit init`             | Siembra el esqueleto                                                        |
 | `sddkit new <initiative>` | Crea `docs/<initiative>/` con sus tres archivos y la anota en el índice     |
 | `sddkit check`            | Comprueba que `docs/` cumple el molde; sale con 1 si no                     |
@@ -37,6 +37,25 @@ que son las de ese proyecto.
 
 Una palabra de `notIds` solo se ignora donde ese ID no existe: en una iniciativa que tiene un hallazgo con ese
 nombre, sigue siendo su hallazgo.
+
+## Correr un checklist con un agente
+
+Las reglas de la corrida ya están en el método, en "Cómo se corre un checklist", y el agente las lee de ahí. El
+prompt lleva solo los datos de esta corrida:
+
+```text
+Corre los checklists 2 y 3 de docs/<initiative>/checklists.md, siguiendo entera la sección "Cómo se corre un
+checklist" del método.
+
+- Aplicación: http://localhost:5173
+- Datos de prueba: el cliente "Demo" y sus pedidos de septiembre
+- Escrituras: autorizadas, con registros de prueba que empiecen por "TEST-" y que borras al terminar
+```
+
+Las tres líneas de datos son opcionales. Sin URL, el agente usa la aplicación que ya esté corriendo o la levanta
+con el comando del `CLAUDE.md`; sin datos, los busca en la aplicación; y sin autorización para escribir, la pide
+antes de empezar si algún punto la necesita. Antes de probar manda un solo mensaje con lo que le falta y espera
+la respuesta.
 
 ## Subir de versión
 
