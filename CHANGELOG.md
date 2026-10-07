@@ -14,6 +14,16 @@ Cambia además una regla del método: un checklist se corre sobre la rama de tra
 la de integración, no sobre la rama de integración. El agente comprueba esa rama antes de empezar. La fase sigue
 pasando a `Built` al llegar a la rama de integración (paso 7).
 
+Cambia también lo que hace un agente al correr un checklist (`kit-v1` `ADR10`). Prueba todo lo que está a su
+alcance: un juicio visual sobre una captura de pantalla, un archivo descargado abriéndolo y la vista de teléfono
+emulada en el navegador; antes le dejaba esos puntos al administrador. Pide siempre el permiso para escribir antes
+de empezar si algún punto lo necesita. Y el administrador ya no revisa el diff del agente contra su reporte: solo
+prueba los puntos que le quedan en `Not run`.
+
+"Lo que cambia para un agente" y "Cuando un cambio toca un checklist" se reescriben sin cambiar más reglas, y el
+método dice ahora cuándo se usa `## Findings without checklist`: para un fallo que aparece sin estar corriendo
+ningún checklist.
+
 "Estados" e "IDs" se reescriben: los puntos de "Estados" van agrupados por el documento del que hablan y cada uno
 dice una sola cosa, y las formas de citar un ID van en una tabla.
 

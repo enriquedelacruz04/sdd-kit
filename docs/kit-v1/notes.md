@@ -2,25 +2,26 @@
 
 ## Summary
 
-| ID   | Type     | What                                                                       | Status      |
-| ---- | -------- | -------------------------------------------------------------------------- | ----------- |
-| ADR1 | ADR      | Paquete npm, no plugin ni submódulo                                        | 🟢 Accepted |
-| ADR2 | ADR      | Nomenclatura en inglés, prosa en español                                   | 🟢 Accepted |
-| ADR3 | ADR      | El método se importa desde `node_modules`                                  | 🟢 Accepted |
-| ADR4 | ADR      | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
-| ADR5 | ADR      | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
-| ADR6 | ADR      | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
-| ADR7 | ADR      | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
-| ADR8 | ADR      | El tipo y la sección de una decisión se llaman `ADR`, como su prefijo      | 🟢 Accepted |
-| ADR9 | ADR      | Una cita dentro de la iniciativa no nombra el archivo                      | 🟢 Accepted |
-| TD1  | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
-| TD2  | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
-| TD3  | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
-| TD4  | Debt     | Mensajes poco claros cuando falta un archivo entero                        | 🟢 Resolved |
-| TD5  | Debt     | El método no dice cómo se marca un checklist como Gate                     | 🟢 Resolved |
-| TD6  | Debt     | Menores de `src/config.js` y `src/io.js`                                   | 🟢 Resolved |
-| N1   | Note     | El corredor de arneses del código no viaja                                 | —           |
-| N2   | Note     | El checklist se quedó en Passed durante cuatro versiones                   | —           |
+| ID    | Type     | What                                                                       | Status      |
+| ----- | -------- | -------------------------------------------------------------------------- | ----------- |
+| ADR1  | ADR      | Paquete npm, no plugin ni submódulo                                        | 🟢 Accepted |
+| ADR2  | ADR      | Nomenclatura en inglés, prosa en español                                   | 🟢 Accepted |
+| ADR3  | ADR      | El método se importa desde `node_modules`                                  | 🟢 Accepted |
+| ADR4  | ADR      | La configuración es `.mjs`, no `.js`                                       | 🟢 Accepted |
+| ADR5  | ADR      | Paquete con scope y comando `sddkit`                                       | 🟢 Accepted |
+| ADR6  | ADR      | Las palabras que no son IDs se declaran en la configuración                | 🟢 Accepted |
+| ADR7  | ADR      | Un Gate se marca con `**Gate:**` y el vigilante lo comprueba               | 🟢 Accepted |
+| ADR8  | ADR      | El tipo y la sección de una decisión se llaman `ADR`, como su prefijo      | 🟢 Accepted |
+| ADR9  | ADR      | Una cita dentro de la iniciativa no nombra el archivo                      | 🟢 Accepted |
+| ADR10 | ADR      | El agente prueba todo lo que alcanza y nadie revisa su diff                | 🟢 Accepted |
+| TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
+| TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
+| TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
+| TD4   | Debt     | Mensajes poco claros cuando falta un archivo entero                        | 🟢 Resolved |
+| TD5   | Debt     | El método no dice cómo se marca un checklist como Gate                     | 🟢 Resolved |
+| TD6   | Debt     | Menores de `src/config.js` y `src/io.js`                                   | 🟢 Resolved |
+| N1    | Note     | El corredor de arneses del código no viaja                                 | —           |
+| N2    | Note     | El checklist se quedó en Passed durante cuatro versiones                   | —           |
 
 ## ADRs
 
@@ -102,6 +103,20 @@ del método y seguir aceptando la forma vieja, que no obliga a nadie a tocar sus
 válidas de la misma cita; o rechazarla. **Decisión:** el vigilante la rechaza, para que la cita tenga una sola
 forma: el ID solo dentro de su iniciativa, y con la carpeta delante si es de otra. El precio es una versión
 mayor, la 5.0.0: cada proyecto borra el nombre del archivo de esas citas.
+
+### ADR10 · El agente prueba todo lo que alcanza y nadie revisa su diff · 🟢 Accepted (2026-10-07)
+
+**Contexto:** al correr un checklist, el agente le dejaba al administrador todo punto con un juicio visual, un
+archivo descargado o la vista de teléfono, podía dejar un punto en `Not run` por falta de permiso para escribir
+sin haberlo pedido, y al terminar el administrador revisaba su diff contra el reporte. El administrador acababa
+haciendo buena parte de la corrida. **Alternativas:** dejarlo; ampliar lo que prueba el agente y conservar la
+revisión del diff, que mantiene un segundo par de ojos sobre cada `Passed`; dejar que el agente escriba sin
+permiso fuera de producción; o ampliar lo que prueba, obligarlo a pedir el permiso y quitar la revisión.
+**Decisión:** la última, porque cuanto menos trabajo le quede al administrador, mejor. El agente juzga sobre una
+captura de pantalla, abre el archivo descargado y emula la vista de teléfono; pide siempre el permiso para
+escribir antes de empezar, y sin él no escribe; y el administrador solo prueba lo que el agente le deja en
+`Not run`. El precio: lo que el agente marca `Passed` y los hallazgos que abre entran al commit sin que nadie
+los revise, con su reporte como único resumen, y una vista emulada no es un teléfono real.
 
 ## Tech debt
 
