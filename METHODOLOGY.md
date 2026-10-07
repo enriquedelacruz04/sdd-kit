@@ -223,9 +223,6 @@ que declara `## Branches` del `CLAUDE.md`, después de traerle todo lo que tenga
 prueba el código que de verdad se integró. Lo corre el administrador o un agente que maneja el navegador con un
 MCP; un Gate, solo el administrador.
 
-El agente lee esta sección entera antes de empezar. Su prompt trae solo los datos de la corrida, no reglas: qué
-checklists y, si ya se saben, la URL de la aplicación, con qué datos probar y si autoriza escrituras.
-
 Cada cambio de estado se escribe en todos los sitios donde aparece: el de un checklist, en su título y en el
 resumen de los checklists; el de una fase, en el roadmap: en su título, en el índice de fases y, si lo que dice
 deja de ser cierto, en el resumen de las fases.
@@ -291,6 +288,10 @@ La severidad es una de tres:
 - `🟡 Low`: cosmético o de redacción, sin efecto en lo que se decide.
 
 ### Lo que cambia para un agente
+
+El agente lee entera la sección "Cómo se corre un checklist" antes de empezar. Su prompt trae solo los datos de
+la corrida, no reglas: qué checklists y, si ya se saben, la URL de la aplicación, con qué datos probar y si
+autoriza escrituras.
 
 - **El navegador y la aplicación.** Antes que nada, confirma tres cosas: que el MCP del navegador responde, que
   el repo está en la rama de trabajo de quien lo lanzó, y que el `checklists.md` y el roadmap de la iniciativa no
@@ -360,12 +361,20 @@ porque es quien sabe qué pantallas y qué comportamientos tocó.
 Un Gate nunca pasa a `Stale`, y uno ya cruzado no se toca: si el cambio toca lo que verificó, lo verifica un
 checklist o un punto de la fase que hace el cambio.
 
-**Si el cambio modifica lo que la pantalla debe hacer**, y no solo cómo lo hace, se reescribe el **Expected:** de
-los puntos afectados, esté el checklist en el estado que esté.
+Quien cambia el código se hace dos preguntas, y cada una tiene su consecuencia:
 
-**Si el checklist ya tiene resultados** y el cambio afecta algo de lo que verifica:
+| Pregunta                                                                              | Si la respuesta es sí                                                              |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| ¿El cambio modifica lo que la pantalla debe hacer, y no solo cómo lo hace?            | Se reescribe el **Expected:** de los puntos afectados, en cualquier estado         |
+| ¿El checklist ya tiene resultados y el cambio afecta algo de lo que verifica?         | Pasa a `🟠 Stale`, y los puntos afectados se vuelven a probar                      |
 
-- **Pasa a `🟠 Stale`**, y su fase, si estaba en `🟢 Verified`, regresa a `🟠 Built`.
+Así, un checklist en `Not run` nunca se vuelve a probar por un cambio: como mucho se le corrige el **Expected:**,
+y su primera corrida ya lo usa. Uno con resultados se vuelve a probar siempre que el cambio lo toque, cambie o no
+su **Expected:**.
+
+Un checklist que pasa a `🟠 Stale`:
+
+- **Devuelve su fase a `🟠 Built`**, si estaba en `🟢 Verified`.
 - **Lleva una línea Retake**: un párrafo aparte en su introducción que dice qué puntos hay que volver a probar y
   por qué. Son los puntos cuyo **Expected:** depende de lo que cambió; si el cambio toca algo que todos comparten
   (los datos que lee la pantalla, un componente común, el cálculo), o si hay duda, se escribe `all`. El motivo
