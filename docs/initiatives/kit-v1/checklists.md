@@ -6,21 +6,17 @@ Necesitan una carpeta vacía fuera de este repo, el `.tgz` que produce `npm pack
 
 | #   | Checklist                  | Phase | Status     | Progress | Last run | Findings |
 | --- | -------------------------- | ----- | ---------- | -------- | -------- | -------- |
-| 1   | Un proyecto nuevo arranca  | PH1   | 🟠 Stale   | 6/6      | 2026-10-07 | 0        |
+| 1   | Un proyecto nuevo arranca  | PH1   | 🟢 Passed  | 6/6      | 2026-10-09 | 0        |
 
 ## Findings
 
 | ID  | Test case | Severity | Summary | Status |
 | --- | --------- | -------- | ------- | ------ |
 
-## Checklist 1 · Un proyecto nuevo arranca · 🟠 Stale
+## Checklist 1 · Un proyecto nuevo arranca · 🟢 Passed
 
 Verifica `PH1` con el paquete instalado de verdad, no con el código del repo: es lo que ningún arnés ve. Se
 repite si cambia lo que entra en el paquete, una plantilla o la línea que importa el método.
-
-**Retake:** `1.A1`, `1.A2`, `1.A3`, `1.A4`, `1.B1`. La versión 6.0.0 cambió el paso 7 del método y la sección
-`## Branches` de la plantilla del `CLAUDE.md` (`ADR11`). La versión 7.0.0 movió las iniciativas a
-`docs/initiatives/` y cambió lo que hace `ignore` (`ADR12`).
 
 ### A · Sembrar y vigilar
 
