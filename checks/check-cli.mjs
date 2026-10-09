@@ -35,7 +35,7 @@ assert.equal((await run(dir, "new", "billing")).code, 0);
 // ---- un defecto sale por el canal de errores, uno por línea, y el código de salida detiene a quien encadena
 // comandos
 {
-  const roadmap = path.join(dir, "docs/billing/roadmap.md");
+  const roadmap = path.join(dir, "docs/initiatives/billing/roadmap.md");
   const text = fs.readFileSync(roadmap, "utf8");
   fs.writeFileSync(roadmap, text.replace("| 🟣 Designed |", "| 🟠 Built |"));
   const bad = await run(dir, "check");
@@ -45,13 +45,14 @@ assert.equal((await run(dir, "new", "billing")).code, 0);
   fs.writeFileSync(roadmap, text);
 }
 
-// ---- la configuración del proyecto llega al vigilante: una carpeta ajena falla hasta que se declara
+// ---- la configuración del proyecto llega al vigilante: una carpeta ajena con una ruta rota falla hasta que se
+// declara
 {
   fs.mkdirSync(path.join(dir, "docs/research"));
-  fs.writeFileSync(path.join(dir, "docs/research/apuntes.md"), "Texto suelto.\n");
+  fs.writeFileSync(path.join(dir, "docs/research/apuntes.md"), "Sale de src/nada.js.\n");
   const bad = await run(dir, "check");
   assert.equal(bad.code, 1);
-  assert.ok(bad.errors.some((e) => /docs\/research no es una iniciativa/.test(e)));
+  assert.ok(bad.errors.some((e) => /docs\/research\/apuntes\.md apunta a src\/nada\.js/.test(e)));
   fs.writeFileSync(path.join(dir, "sdd.config.mjs"), 'export default { ignore: ["research"] };\n');
   assert.equal((await run(dir, "check")).code, 0);
 }

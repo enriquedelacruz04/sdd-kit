@@ -4,6 +4,25 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 7.0.0
+
+Las iniciativas viven en `docs/initiatives/`, no directamente en `docs/` (`kit-v1` `ADR12`). Toda carpeta de
+ahí dentro es una iniciativa, y una carpeta de `docs/` que no lo es ya no se declara en ningún sitio.
+`sddkit new` crea la iniciativa en `docs/initiatives/` y la anota en el índice como `initiatives/<initiative>/`.
+
+`ignore` cambia de oficio: nombra las carpetas de `docs/` cuyos documentos el vigilante no lee al comprobar las
+rutas citadas. Ya no saca a una carpeta del descubrimiento de iniciativas, porque fuera de `docs/initiatives/`
+nada se toma por una.
+
+Una cita no cambia: la carpeta de la iniciativa sigue siendo su nombre, (`billing` `N34`).
+
+**Migración:** cada carpeta de iniciativa se mueve de `docs/<initiative>/` a `docs/initiatives/<initiative>/`, con
+`git mv` para conservar su historial; mientras siga en `docs/`, el vigilante falla y dice a dónde va. En
+`docs/README.md`, su línea pasa a `initiatives/<initiative>/`. Toda ruta citada a uno de sus archivos —en
+`docs/`, en el `CLAUDE.md` o en el prompt de un agente— gana el tramo `initiatives/`; el vigilante nombra las
+que dejaron de existir. Las carpetas de `ignore` se quedan donde están, y su entrada se puede borrar si sus
+documentos no citan rutas que no existen.
+
 ## 6.0.0
 
 Cambia una regla del método: la fase pasa a `Built` con el merge a la rama de trabajo (paso 7), sin esperar a

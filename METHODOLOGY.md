@@ -25,8 +25,8 @@ verificar.
 
 ### Iniciativa o cambio acotado
 
-Un trabajo con más de una fase o con checklist propio es una iniciativa: carpeta en `docs/` y los nueve pasos. La
-carpeta se crea con `npx sddkit new <initiative>`, que deja sus tres archivos ya válidos.
+Un trabajo con más de una fase o con checklist propio es una iniciativa: carpeta en `docs/initiatives/` y los nueve
+pasos. La carpeta se crea con `npx sddkit new <initiative>`, que deja sus tres archivos ya válidos.
 
 Un cambio acotado —el camino _bounded_ del brainstorming— se salta los pasos 1 a 3, no crea carpeta y no toca
 ningún roadmap.
@@ -39,23 +39,28 @@ ningún roadmap.
 docs/
   README.md                 ← índice: una línea por archivo o carpeta
   architecture/notes.md     ← lo transversal, que no es de ninguna iniciativa
-  <initiative>/
-    roadmap.md              ← dónde estamos: fases, orden de ejecución, bloqueos
-    checklists.md           ← qué probar en pantalla y qué salió
-    notes.md                ← por qué las cosas son así: decisiones, deuda, notas, procedimientos
+  initiatives/
+    <initiative>/
+      roadmap.md            ← dónde estamos: fases, orden de ejecución, bloqueos
+      checklists.md         ← qué probar en pantalla y qué salió
+      notes.md              ← por qué las cosas son así: decisiones, deuda, notas, procedimientos
   superpowers/specs|plans   ← el diseño y el plan de cada fase
 ```
 
-| Lo que tienes                                         | Dónde va                                                        |
-| ----------------------------------------------------- | --------------------------------------------------------------- |
-| Un trabajo con más de una fase o con checklist propio | Carpeta nueva con sus tres archivos, y una línea en `README.md` |
-| Una lección que vale para cualquier feature           | `docs/architecture/notes.md`                                    |
-| Algo que sirve para más de una iniciativa             | `docs/architecture/notes.md`: nunca dentro de una iniciativa    |
-| Por qué una línea de código es como es                | Un comentario en el código, no `docs/`                          |
+| Lo que tienes                                         | Dónde va                                                                          |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Un trabajo con más de una fase o con checklist propio | Carpeta en `docs/initiatives/`, con sus tres archivos y una línea en `README.md`  |
+| Una lección que vale para cualquier feature           | `docs/architecture/notes.md`                                                      |
+| Algo que sirve para más de una iniciativa             | `docs/architecture/notes.md`: nunca dentro de una iniciativa                      |
+| Por qué una línea de código es como es                | Un comentario en el código, no `docs/`                                            |
 
-Una carpeta de `docs/` que no es una iniciativa —material de un cliente, una investigación— se declara en
-`ignore` de `sdd.config.mjs`. Dentro de una iniciativa solo caben sus tres archivos y una carpeta `assets` con
-las imágenes que su spec cita.
+Toda carpeta de `docs/initiatives/` es una iniciativa, y ninguna se llama `architecture`, `initiatives` ni
+`superpowers`. Dentro de una iniciativa solo caben sus tres archivos y una carpeta `assets` con las imágenes que
+su spec cita.
+
+Una carpeta de `docs/` que no es una iniciativa —material de un cliente, una investigación— va junto a
+`initiatives/`, no dentro, y no se declara en ningún sitio. Si sus documentos no deben pasar por el vigilante, su
+nombre va en `ignore` de `sdd.config.mjs`.
 
 ### El molde de cada archivo
 

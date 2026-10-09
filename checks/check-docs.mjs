@@ -32,7 +32,7 @@ Empieza por \`docs/README.md\`.
   "docs/README.md": `# Documentación
 
 - \`architecture/notes.md\` — lo transversal
-- \`fake/\` — una iniciativa de prueba
+- \`initiatives/fake/\` — una iniciativa de prueba
 `,
   "docs/architecture/notes.md": `# Architecture — notes
 
@@ -41,7 +41,7 @@ Empieza por \`docs/README.md\`.
 | ID | Type | What | Status |
 | --- | --- | --- | --- |
 `,
-  "docs/fake/roadmap.md": `# Fake — roadmap
+  "docs/initiatives/fake/roadmap.md": `# Fake — roadmap
 
 Una iniciativa de prueba.
 
@@ -69,7 +69,7 @@ El resumen y el detalle están en \`notes.md\`.
 
 Construye algo; lo explica (\`N1\`).
 `,
-  "docs/fake/checklists.md": `# Fake — checklists
+  "docs/initiatives/fake/checklists.md": `# Fake — checklists
 
 ## Checklists summary
 
@@ -99,7 +99,7 @@ Verifica \`PH1\`; \`1.A2\` es el que importa.
 | --- | --- | --- | --- | --- | --- |
 | F1 | 1.A1 | 🟠 High | Algo falló | Se arregló | 🟢 Fixed |
 `,
-  "docs/fake/notes.md": `# Fake — notas
+  "docs/initiatives/fake/notes.md": `# Fake — notas
 
 ## Summary
 
@@ -151,58 +151,58 @@ assert.deepEqual(runFixture(VALID), []);
 
 // ---- el estado de una fase se escribe en el índice y en su título: si divergen, uno de los dos miente
 expectError(
-  withDefect("docs/fake/roadmap.md", "| 🟢 Verified | — | — |", "| 🟠 Built | — | — |"),
+  withDefect("docs/initiatives/fake/roadmap.md", "| 🟢 Verified | — | — |", "| 🟠 Built | — | — |"),
   /dice Built en el índice/,
 );
 
 // ---- la liga entre fase y checklist vive solo en checklists.md; nombrarla en el roadmap la duplica
 expectError(
-  withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo y su checklist;"),
+  withDefect("docs/initiatives/fake/roadmap.md", "Construye algo;", "Construye algo y su checklist;"),
   /nombra un checklist/,
 );
 
 // ---- la publicación la decide el administrador y solo aparece en "Execution order"
 expectError(
-  withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo, antes de publicar;"),
+  withDefect("docs/initiatives/fake/roadmap.md", "Construye algo;", "Construye algo, antes de publicar;"),
   /habla de publicación/,
 );
 
 // ---- un estado sin su emoji, o con el color de otro, rompe la lectura de un vistazo
-expectError(withDefect("docs/fake/checklists.md", "| 🟢 Passed | 2/2", "| Passed | 2/2"), /no lleva su emoji/);
-expectError(withDefect("docs/fake/notes.md", "| 🟠 Open |", "| 🟢 Open |"), /debería llevar 🟠/);
+expectError(withDefect("docs/initiatives/fake/checklists.md", "| 🟢 Passed | 2/2", "| Passed | 2/2"), /no lleva su emoji/);
+expectError(withDefect("docs/initiatives/fake/notes.md", "| 🟠 Open |", "| 🟢 Open |"), /debería llevar 🟠/);
 
 // ---- un punto fuera de su sección deja de ser rastreable por su ID
-expectError(withDefect("docs/fake/checklists.md", "- **1.A2** ·", "- **1.B2** ·"), /1\.B2 está dentro de la sección A/);
+expectError(withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** ·", "- **1.B2** ·"), /1\.B2 está dentro de la sección A/);
 
 // ---- sin su estado, un punto no dice si ya se tomó, que es para lo que existe el estado por punto
 expectError(
-  withDefect("docs/fake/checklists.md", "- **1.A2** · 🟢 Passed · ", "- **1.A2** · "),
+  withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed · ", "- **1.A2** · "),
   /1\.A2 no tiene un estado válido/,
 );
 expectError(
-  withDefect("docs/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🟡 Passed"),
+  withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🟡 Passed"),
   /"🟡 Passed" debería llevar 🟢/,
 );
 
 // ---- un checklist en Passed con un punto sin tomar se lee como terminado y no lo está
 expectError(
-  withDefect("docs/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · ⚪ Not run"),
+  withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · ⚪ Not run"),
   /el checklist 1 está en Passed y 1\.A2 está en Not run/,
 );
 
 // ---- el avance del resumen se escribe a mano y se queda viejo, igual que el contador de hallazgos
-expectError(withDefect("docs/fake/checklists.md", "| 2/2 |", "| 1/2 |"), /dice 1\/2 de avance y tiene 2\/2/);
+expectError(withDefect("docs/initiatives/fake/checklists.md", "| 2/2 |", "| 1/2 |"), /dice 1\/2 de avance y tiene 2\/2/);
 
 // ---- un bloqueo sin motivo no dice qué hace falta para desbloquearlo
 expectError(
-  withDefect("docs/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🟡 Blocked"),
+  withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🟡 Blocked"),
   /1\.A2 está en Blocked sin decir por qué/,
 );
 // El motivo suele caer en otra línea del mismo punto; leer solo la primera daría un falso error.
 assert.ok(
   !runFixture(
     withDefect(
-      "docs/fake/checklists.md",
+      "docs/initiatives/fake/checklists.md",
       "- **1.A2** · 🟢 Passed · Hacer otra cosa.\n  En dos líneas.",
       "- **1.A2** · 🟡 Blocked · Hacer otra cosa.\n  **Blocked:** falta algo.",
     ),
@@ -212,13 +212,13 @@ assert.ok(
 
 // ---- un motivo de bloqueo que sobrevive al desbloqueo se sigue leyendo como vigente
 expectError(
-  withDefect("docs/fake/checklists.md", "En dos líneas.", "En dos líneas. **Blocked:** falta algo."),
+  withDefect("docs/initiatives/fake/checklists.md", "En dos líneas.", "En dos líneas. **Blocked:** falta algo."),
   /1\.A2 está en Passed y conserva su \*\*Blocked:\*\*/,
 );
 
 // ---- un punto que falló sin hallazgo pierde qué pasó y quién lo cierra
 expectError(
-  withDefect("docs/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🔴 Failed"),
+  withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🔴 Failed"),
   /1\.A2 está en Failed y ningún hallazgo lo cita/,
 );
 
@@ -228,13 +228,13 @@ for (const [closed, rule] of [
   ["⚪ Not a bug", "Not a bug"],
   ["🟠 Deferred (TD1)", "Deferred"],
 ]) {
-  const file = "docs/fake/checklists.md";
+  const file = "docs/initiatives/fake/checklists.md";
   const half = withDefect(file, "- **1.A1** · 🟢 Passed", "- **1.A1** · 🔴 Failed");
   half[file] = half[file]
     .replace("| 🟢 Passed | 2/2", "| 🟡 Running | 1/2")
     .replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟡 Running")
     .replaceAll("| 🟢 Fixed |", `| ${closed} |`);
-  half["docs/fake/roadmap.md"] = half["docs/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
+  half["docs/initiatives/fake/roadmap.md"] = half["docs/initiatives/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
   expectError(half, /1\.A1 está en Failed y solo lo citan hallazgos en Not a bug o Deferred/);
   // Con el hallazgo en Fixed, el mismo Failed es válido: espera a que se vuelva a tomar el punto.
   const fixed = {
@@ -248,7 +248,7 @@ for (const [closed, rule] of [
 expectError(
   {
     ...VALID,
-    "docs/fake/checklists.md": VALID["docs/fake/checklists.md"]
+    "docs/initiatives/fake/checklists.md": VALID["docs/initiatives/fake/checklists.md"]
       .replaceAll("| 🟠 High |", "| 🔴 Critical |")
       .replaceAll("| 🟢 Fixed |", "| 🟠 Deferred (TD1) |"),
   },
@@ -258,7 +258,7 @@ expectError(
 // ---- un hallazgo que cita un punto inexistente pierde de dónde salió
 expectError(
   withDefect(
-    "docs/fake/checklists.md",
+    "docs/initiatives/fake/checklists.md",
     "| F1 | 1.A1 | 🟠 High | Algo falló | Se arregló",
     "| F1 | 1.A9 | 🟠 High | Algo falló | Se arregló",
   ),
@@ -267,15 +267,15 @@ expectError(
 
 // ---- el contador de hallazgos del resumen se escribe a mano y se queda viejo
 expectError(
-  withDefect("docs/fake/checklists.md", "| 2026-09-14 | 1 |", "| 2026-09-14 | 0 |"),
+  withDefect("docs/initiatives/fake/checklists.md", "| 2026-09-14 | 1 |", "| 2026-09-14 | 0 |"),
   /dice 0 hallazgos y tiene 1/,
 );
 
 // ---- un checklist en Stale deja de respaldar a su fase: si la fase sigue en Verified, afirma algo que ya nadie
 // comprobó. El estado del checklist va en dos sitios, así que el defecto se mete en los dos.
 {
-  const stale = withDefect("docs/fake/checklists.md", "| 🟢 Passed | 2/2", "| 🟠 Stale | 2/2");
-  const file = "docs/fake/checklists.md";
+  const stale = withDefect("docs/initiatives/fake/checklists.md", "| 🟢 Passed | 2/2", "| 🟠 Stale | 2/2");
+  const file = "docs/initiatives/fake/checklists.md";
   assert.ok(stale[file].includes("## Checklist 1 · Uno · 🟢 Passed"));
   stale[file] = stale[file].replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟠 Stale");
   expectError(stale, /PH1 está en Verified y su checklist 1 está en Stale/);
@@ -284,14 +284,14 @@ expectError(
 // ---- **Retake:** dice qué puntos repone la siguiente corrida. Cada caso parte de un checklist en Stale con su
 // fase ya en Built, para que el defecto de la línea sea el único.
 {
-  const file = "docs/fake/checklists.md";
+  const file = "docs/initiatives/fake/checklists.md";
   const intro = "Verifica `PH1`; `1.A2` es el que importa.";
   const staleWith = (retake) => {
     const files = withDefect(file, "| 🟢 Passed | 2/2", "| 🟠 Stale | 2/2");
     files[file] = files[file]
       .replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟠 Stale")
       .replace(intro, retake === null ? intro : `${intro}\n\n${retake}`);
-    files["docs/fake/roadmap.md"] = files["docs/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
+    files["docs/initiatives/fake/roadmap.md"] = files["docs/initiatives/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
     return files;
   };
   const retakeErrors = (files) => runFixture(files).filter((e) => /Retake|retoma /.test(e));
@@ -316,7 +316,7 @@ expectError(
 // ---- un **Retake:** que sobrevive al cierre anuncia una corrida parcial que ya terminó
 expectError(
   withDefect(
-    "docs/fake/checklists.md",
+    "docs/initiatives/fake/checklists.md",
     "Verifica `PH1`; `1.A2` es el que importa.",
     "Verifica `PH1`; `1.A2` es el que importa.\n\n**Retake:** all. Cambió.",
   ),
@@ -324,18 +324,18 @@ expectError(
 );
 
 // ---- el resumen de notas lista todo lo que guarda el archivo, notas incluidas
-expectError(withDefect("docs/fake/notes.md", "| N1 | Note | Una nota | — |\n", ""), /N1 no está en el resumen/);
+expectError(withDefect("docs/initiatives/fake/notes.md", "| N1 | Note | Una nota | — |\n", ""), /N1 no está en el resumen/);
 
 // ---- el tipo del resumen se escribe a mano; uno inventado ("Tech debt") ya se coló una vez
 expectError(
-  withDefect("docs/fake/notes.md", "| TD1 | Debt |", "| TD1 | Tech debt |"),
+  withDefect("docs/initiatives/fake/notes.md", "| TD1 | Debt |", "| TD1 | Tech debt |"),
   /TD1 es Debt y el resumen dice "Tech debt"/,
 );
 
 // ---- el resumen agrupado por tipo se lee en el mismo orden que el archivo; mezclado, se pierde lo que falta
 expectError(
   withDefect(
-    "docs/fake/notes.md",
+    "docs/initiatives/fake/notes.md",
     "| ADR1 | ADR | Una decisión | 🟢 Accepted |\n| TD1 | Debt | Una deuda | 🟠 Open |",
     "| TD1 | Debt | Una deuda | 🟠 Open |\n| ADR1 | ADR | Una decisión | 🟢 Accepted |",
   ),
@@ -344,53 +344,53 @@ expectError(
 
 // ---- el tipo de un ADR es ADR, como su prefijo: Decision, su nombre hasta la 2.x, ya no pasa (kit-v1 ADR8)
 expectError(
-  withDefect("docs/fake/notes.md", "| ADR1 | ADR |", "| ADR1 | Decision |"),
+  withDefect("docs/initiatives/fake/notes.md", "| ADR1 | ADR |", "| ADR1 | Decision |"),
   /ADR1 es ADR y el resumen dice "Decision"/,
 );
 
 // ---- con las secciones en el mismo orden en todas las iniciativas, cada entrada se busca en el mismo sitio
 expectError(
-  withDefect("docs/fake/notes.md", "## ADRs", "## References\n\nUn enlace.\n\n## ADRs"),
+  withDefect("docs/initiatives/fake/notes.md", "## ADRs", "## References\n\nUn enlace.\n\n## ADRs"),
   /"## ADRs" está fuera de orden/,
 );
 expectError(
-  withDefect("docs/fake/notes.md", "## Notes", "## Loose notes"),
+  withDefect("docs/initiatives/fake/notes.md", "## Notes", "## Loose notes"),
   /"## Loose notes" no es una sección de notes\.md/,
 );
 
 // ---- un checklist sin su tabla de hallazgos obliga a quien anota el primero a inventarle un formato
 expectError(
-  withDefect("docs/fake/checklists.md", "### Findings of checklist 1", "### Findings of the first one"),
+  withDefect("docs/initiatives/fake/checklists.md", "### Findings of checklist 1", "### Findings of the first one"),
   /el checklist 1 no tiene su tabla "Findings of checklist 1"/,
 );
 
 // ---- la deuda pagada no se borra: cambia a Resolved con fecha; cualquier otro estado es un error
 expectError(
-  withDefect("docs/fake/notes.md", "Una deuda · 🟠 Open", "Una deuda · 🟢 Closed"),
+  withDefect("docs/initiatives/fake/notes.md", "Una deuda · 🟠 Open", "Una deuda · 🟢 Closed"),
   /TD1 debe estar Open o Resolved/,
 );
 
 // ---- un ID nunca se reutiliza: dos entradas con el mismo son dos cosas con una sola dirección
 expectError(
-  withDefect("docs/fake/notes.md", "### N1 · Una nota", "### ADR1 · Una nota · 🟢 Accepted (2026-09-14)"),
+  withDefect("docs/initiatives/fake/notes.md", "### N1 · Una nota", "### ADR1 · Una nota · 🟢 Accepted (2026-09-14)"),
   /ADR1 está repetido/,
 );
 
 // ---- las citas llevan cada pieza en su propio código; el formato viejo vuelve a mezclar estilos
-expectError(withDefect("docs/fake/roadmap.md", "(`N1`)", "(N1 en `notes.md`)"), /N1 citado sin su código/);
+expectError(withDefect("docs/initiatives/fake/roadmap.md", "(`N1`)", "(N1 en `notes.md`)"), /N1 citado sin su código/);
 expectError(
-  withDefect("docs/fake/notes.md", "Sale de (`ADR1`).", "Sale de `architecture N7`."),
+  withDefect("docs/initiatives/fake/notes.md", "Sale de (`ADR1`).", "Sale de `architecture N7`."),
   /iniciativa e ID en un solo código/,
 );
-expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1;"), /PH1 citado sin su código/);
+expectError(withDefect("docs/initiatives/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1;"), /PH1 citado sin su código/);
 
 // ---- una cita a un ID que no existe —borrado, o mal escrito— remite a nada y se sigue leyendo como cierta
-expectError(withDefect("docs/fake/roadmap.md", "(`N1`)", "(`N9`)"), /cita N9, que no existe/);
-expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica `PH7`;"), /cita PH7, que no existe/);
+expectError(withDefect("docs/initiatives/fake/roadmap.md", "(`N1`)", "(`N9`)"), /cita N9, que no existe/);
+expectError(withDefect("docs/initiatives/fake/checklists.md", "Verifica `PH1`;", "Verifica `PH7`;"), /cita PH7, que no existe/);
 
 // ---- dentro de la iniciativa el ID va solo: nombrar el archivo repite lo que el prefijo ya dice
 expectError(
-  withDefect("docs/fake/roadmap.md", "(`N1`)", "(`notes.md` `N1`)"),
+  withDefect("docs/initiatives/fake/roadmap.md", "(`N1`)", "(`notes.md` `N1`)"),
   /roadmap\.md:\d+: la cita nombra el archivo/,
 );
 expectError(
@@ -399,32 +399,61 @@ expectError(
 );
 // El ajuste de línea puede partir la cita: el archivo al final de una línea y el ID al principio de la siguiente.
 expectError(
-  withDefect("docs/fake/roadmap.md", "(`N1`)", "(`notes.md`\n  `N1`)"),
+  withDefect("docs/initiatives/fake/roadmap.md", "(`N1`)", "(`notes.md`\n  `N1`)"),
   /roadmap\.md:\d+: la cita nombra el archivo/,
 );
 // Nombrar el archivo al final de una línea no es una cita si lo que sigue no es un ID.
 assert.deepEqual(
-  runFixture(withDefect("docs/fake/roadmap.md", "(`N1`)", "(`N1`), y el detalle está en `notes.md`\n\nOtro párrafo.")),
+  runFixture(withDefect("docs/initiatives/fake/roadmap.md", "(`N1`)", "(`N1`), y el detalle está en `notes.md`\n\nOtro párrafo.")),
   [],
 );
 
 // ---- una iniciativa puede traer una carpeta `assets` con las imágenes que su spec cita: no es un archivo ajeno
 {
-  const files = { ...VALID, "docs/fake/assets/formato.png": "" };
+  const files = { ...VALID, "docs/initiatives/fake/assets/formato.png": "" };
   assert.deepEqual(runFixture(files), []);
 }
 
 // ---- cualquier otra entrada de más sigue rompiendo el molde: `assets` no abre la puerta a borradores ni a carpetas
 // El mensaje nombra lo que sobra: listar los cuatro archivos deja a quien lo lee buscando cuál es el intruso.
-expectError({ ...VALID, "docs/fake/borrador.md": "" }, /fake: sobra borrador\.md:/);
-expectError({ ...VALID, "docs/fake/otra/nota.md": "" }, /fake: sobra otra:/);
+expectError({ ...VALID, "docs/initiatives/fake/borrador.md": "" }, /fake: sobra borrador\.md:/);
+expectError({ ...VALID, "docs/initiatives/fake/otra/nota.md": "" }, /fake: sobra otra:/);
 
-// ---- una carpeta de docs/ que no es iniciativa queda fuera de la vigilancia sin que nadie lo decida: falla
-// hasta que se declara en `ignore`
+// ---- las iniciativas viven en docs/initiatives/: una carpeta de docs/ que no lo es —material de un cliente, una
+// investigación— no se declara en ningún sitio
+assert.deepEqual(runFixture({ ...VALID, "docs/research/apuntes.md": "Texto suelto." }), []);
+
+// ---- sus documentos se leen igual que los demás: una ruta citada que no existe falla hasta que la carpeta se
+// declara en `ignore`
 {
-  const files = { ...VALID, "docs/research/apuntes.md": "Texto suelto." };
-  expectError(files, /docs\/research no es una iniciativa/);
+  const files = { ...VALID, "docs/research/apuntes.md": "Sale de src/nada.js." };
+  expectError(files, /docs\/research\/apuntes\.md apunta a src\/nada\.js, que no existe/);
   assert.deepEqual(runFixture(files, { ...DEFAULTS, ignore: ["research"] }), []);
+}
+
+// ---- dentro de docs/initiatives/ todo es una iniciativa: una carpeta a medias falla, y ahí `ignore` no la salva
+{
+  const files = { ...VALID, "docs/initiatives/draft/roadmap.md": VALID["docs/initiatives/fake/roadmap.md"] };
+  expectError(files, /docs\/initiatives\/draft no es una iniciativa: le faltan sus tres archivos/);
+  expectError(files, /docs\/initiatives\/draft no es una iniciativa/, { ...DEFAULTS, ignore: ["draft"] });
+}
+
+// ---- una iniciativa que se quedó en docs/ al subir de versión ya no se descubre: sin este error dejaría de
+// vigilarse en silencio
+{
+  const stray = Object.fromEntries(
+    Object.entries(VALID).map(([k, v]) => [k.replace("docs/initiatives/fake/", "docs/fake/"), v]),
+  );
+  expectError(stray, /docs\/fake es una iniciativa fuera de docs\/initiatives\/: muévela a docs\/initiatives\/fake/);
+}
+
+// ---- `architecture` es el nombre con el que se citan las notas transversales: una iniciativa llamada así haría
+// ambigua cada cita con ese prefijo
+{
+  const clash = { ...VALID };
+  for (const f of ["roadmap.md", "checklists.md", "notes.md"])
+    clash["docs/initiatives/architecture/" + f] = VALID["docs/initiatives/fake/" + f];
+  expectError(clash, /docs\/initiatives\/architecture: "architecture" es un nombre reservado del molde/);
 }
 
 // ---- un archivo suelto en docs/ (un PDF, el propio README) no es una carpeta y no se toma por iniciativa
@@ -432,7 +461,7 @@ assert.deepEqual(runFixture({ ...VALID, "docs/formato.pdf": "" }), []);
 
 // ---- un proyecto recién sembrado no tiene iniciativas, y eso cumple el molde
 {
-  const fresh = Object.fromEntries(Object.entries(VALID).filter(([k]) => !k.startsWith("docs/fake/")));
+  const fresh = Object.fromEntries(Object.entries(VALID).filter(([k]) => !k.startsWith("docs/initiatives/fake/")));
   fresh["docs/README.md"] = "# Documentación\n\n- `architecture/notes.md` — lo transversal\n";
   assert.deepEqual(runFixture(fresh), []);
 }
@@ -459,7 +488,7 @@ expectError(VALID, /CLAUDE\.md: falta el título "## UI"/, {
 // ---- qué palabras delatan una publicación depende del proyecto: una que no está en la lista no falla, y la
 // misma, declarada, sí
 {
-  const files = withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo, espera al binario;");
+  const files = withDefect("docs/initiatives/fake/roadmap.md", "Construye algo;", "Construye algo, espera al binario;");
   assert.deepEqual(runFixture(files), []);
   expectError(files, /habla de publicación/, {
     ...DEFAULTS,
@@ -538,7 +567,7 @@ Texto.
 // error tiene que decir que faltan columnas
 expectError(
   withDefect(
-    "docs/fake/checklists.md",
+    "docs/initiatives/fake/checklists.md",
     "| F1 | 1.A1 | 🟠 High | Algo falló | Se arregló | 🟢 Fixed |",
     "| F1 | 1.A1 | 🟠 High | Algo falló | 🟢 Fixed |",
   ),
@@ -547,7 +576,7 @@ expectError(
 assert.ok(
   !runFixture(
     withDefect(
-      "docs/fake/checklists.md",
+      "docs/initiatives/fake/checklists.md",
       "| F1 | 1.A1 | 🟠 High | Algo falló | Se arregló | 🟢 Fixed |",
       "| F1 | 1.A1 | 🟠 High | Algo falló | 🟢 Fixed |",
     ),
@@ -559,18 +588,18 @@ assert.ok(
 // Sin emoji, porque con él otra regla ya lo rechaza y el caso no probaría la del ancla final.
 for (const tail of ["🟢 Accepted luego", "Accepted luego"])
   expectError(
-    withDefect("docs/fake/notes.md", "· 🟢 Accepted (2026-09-14)", `· ${tail}`),
+    withDefect("docs/initiatives/fake/notes.md", "· 🟢 Accepted (2026-09-14)", `· ${tail}`),
     /ADR1 no tiene un estado de decisión válido/,
   );
 // Las formas válidas siguen pasando: con fecha, sin fecha y sustituida.
 for (const title of ["🟢 Accepted", "🟡 Proposed (2026-09-14)", "⚫ Superseded (ADR2)"]) {
   const status = title.replace(/ \(\d{4}-\d{2}-\d{2}\)$/, "");
   const files = withDefect(
-    "docs/fake/notes.md",
+    "docs/initiatives/fake/notes.md",
     "### ADR1 · Una decisión · 🟢 Accepted (2026-09-14)",
     `### ADR1 · Una decisión · ${title}`,
   );
-  files["docs/fake/notes.md"] = files["docs/fake/notes.md"].replace(
+  files["docs/initiatives/fake/notes.md"] = files["docs/initiatives/fake/notes.md"].replace(
     "| ADR1 | ADR | Una decisión | 🟢 Accepted |",
     `| ADR1 | ADR | Una decisión | ${status} |`,
   );
@@ -600,16 +629,16 @@ assert.deepEqual(runFixture({ "CLAUDE.md": VALID["CLAUDE.md"] }), [
 // ---- una tecla de función o un código de producto tienen forma de ID sin serlo. Sin declararlos, fallan como
 // cita; declarados en `notIds`, dejan de leerse como IDs, sueltos o entre acentos graves
 {
-  const bare = withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo, que se abre con F12;");
+  const bare = withDefect("docs/initiatives/fake/roadmap.md", "Construye algo;", "Construye algo, que se abre con F12;");
   expectError(bare, /F12 citado sin su código/);
   assert.deepEqual(runFixture(bare, { ...DEFAULTS, notIds: ["F12"] }), []);
 
-  const coded = withDefect("docs/fake/notes.md", "Sale de (`ADR1`).", "Sale de (`ADR1`), con la tecla `F12`.");
+  const coded = withDefect("docs/initiatives/fake/notes.md", "Sale de (`ADR1`).", "Sale de (`ADR1`), con la tecla `F12`.");
   expectError(coded, /cita F12, que no existe/);
   assert.deepEqual(runFixture(coded, { ...DEFAULTS, notIds: ["F12"] }), []);
 
   // Declarar una palabra no apaga la vigilancia de las demás: una cita de verdad sin su código sigue fallando.
-  expectError(withDefect("docs/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1 con F12;"), /PH1 citado sin su código/, {
+  expectError(withDefect("docs/initiatives/fake/checklists.md", "Verifica `PH1`;", "Verifica PH1 con F12;"), /PH1 citado sin su código/, {
     ...DEFAULTS,
     notIds: ["F12"],
   });
@@ -624,7 +653,7 @@ assert.deepEqual(runFixture({ "CLAUDE.md": VALID["CLAUDE.md"] }), [
   const config = { ...DEFAULTS, notIds: ["F1"] };
   // En la iniciativa que tiene un hallazgo F1 sigue siendo un ID: suelto en la prosa, falla.
   expectError(
-    withDefect("docs/fake/roadmap.md", "Construye algo;", "Construye algo con F1;"),
+    withDefect("docs/initiatives/fake/roadmap.md", "Construye algo;", "Construye algo con F1;"),
     /F1 citado sin su código/,
     config,
   );
@@ -650,7 +679,7 @@ expectError(VALID, /"Foo" en notIds no tiene forma de ID/, { ...DEFAULTS, notIds
 // ---- la introducción de un checklist enumera requisitos con una lista numerada, y eso no es un punto: el aviso de
 // "punto sin ID" solo tiene sentido dentro de una sección, que es donde viven los puntos
 {
-  const file = "docs/fake/checklists.md";
+  const file = "docs/initiatives/fake/checklists.md";
   const intro = "Verifica `PH1`; `1.A2` es el que importa.";
   assert.deepEqual(runFixture(withDefect(file, intro, `${intro}\n\n1. Tener una cuenta.\n2. Tener datos de prueba.`)), []);
   expectError(
@@ -680,7 +709,7 @@ for (const bad of ["docs/research", "research/", "research\\apuntes"])
 // ---- un Gate se cruza una vez y nunca pasa a Stale. La marca **Gate:** en su introducción es lo que deja al
 // vigilante comprobarlo; sin ella, la regla solo vivía en la cabeza de quien edita
 {
-  const file = "docs/fake/checklists.md";
+  const file = "docs/initiatives/fake/checklists.md";
   const intro = "Verifica `PH1`; `1.A2` es el que importa.";
   const gated = withDefect(file, intro, `${intro}\n\n**Gate:** desbloquea la fase siguiente.`);
   assert.deepEqual(runFixture(gated), []);
@@ -690,7 +719,7 @@ for (const bad of ["docs/research", "research/", "research\\apuntes"])
     .replace("| 🟢 Passed | 2/2", "| 🟠 Stale | 2/2")
     .replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟠 Stale")
     .replace("**Gate:** desbloquea la fase siguiente.", "**Gate:** desbloquea la fase siguiente.\n\n**Retake:** all. Cambió.");
-  stale["docs/fake/roadmap.md"] = stale["docs/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
+  stale["docs/initiatives/fake/roadmap.md"] = stale["docs/initiatives/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built");
   expectError(stale, /el checklist 1 es un Gate y está en Stale/);
   // El mismo checklist en Stale, sin la marca, no da ese error: lo que falla es el Gate, no el Stale.
   const plain = { ...stale, [file]: stale[file].replace("**Gate:** desbloquea la fase siguiente.\n\n", "") };

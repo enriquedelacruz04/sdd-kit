@@ -3,7 +3,7 @@
 // formato se leen como ciertos, y el desfase crece sin que nadie lo vea.
 import path from "node:path";
 
-import { CONFIG_FILE, INITIATIVE_FILES, RESERVED, resolveConfig } from "./config.js";
+import { CONFIG_FILE, INITIATIVE_FILES, INITIATIVES_DIR, RESERVED, resolveConfig } from "./config.js";
 
 const PHASE = {
   Pending: "⚪",
@@ -98,22 +98,29 @@ export function checkDocs(io, userConfig = {}) {
 
   if (!io.isDir("docs")) return ["no hay carpeta docs/ aquí: corre `sddkit init` en la raíz del proyecto"];
 
-  // Toda carpeta de docs/ es una iniciativa salvo las reservadas y las que el proyecto declara: una lista
-  // escrita a mano deja fuera de la vigilancia a la iniciativa que nadie se acordó de añadir.
   // `ignore` se compara con el nombre de cada carpeta: una ruta no coincide con ninguna y no ignoraría nada.
   for (const entry of config.ignore)
     if (/[\\/]/.test(entry))
       fail(`${CONFIG_FILE}: "${entry}" en ignore debe ser solo el nombre de una carpeta de docs/, sin barras`);
-  const skipped = new Set([...RESERVED, ...config.ignore]);
+  // Toda carpeta de docs/initiatives/ es una iniciativa: una lista escrita a mano deja fuera de la vigilancia a
+  // la que nadie se acordó de añadir.
   const initiatives = [];
+  for (const name of io.list(INITIATIVES_DIR)) {
+    const dir = `${INITIATIVES_DIR}/${name}`;
+    if (!io.isDir(dir)) continue;
+    const files = io.list(dir);
+    if (RESERVED.includes(name)) fail(`${dir}: "${name}" es un nombre reservado del molde, no el de una iniciativa`);
+    else if (INITIATIVE_FILES.every((f) => files.includes(f))) initiatives.push(name);
+    else fail(`${dir} no es una iniciativa: le faltan sus tres archivos. Lo que no lo es va fuera de ${INITIATIVES_DIR}/`);
+  }
+  // Hasta la 6.0.0 las iniciativas colgaban de docs/. Una que se quedó ahí ya no se descubre, y sin este error
+  // dejaría de vigilarse en silencio al subir de versión.
+  const skipped = new Set([...RESERVED, ...config.ignore]);
   for (const name of io.list("docs")) {
     if (!io.isDir(`docs/${name}`) || skipped.has(name)) continue;
     const files = io.list(`docs/${name}`);
-    if (INITIATIVE_FILES.every((f) => files.includes(f))) initiatives.push(name);
-    else
-      fail(
-        `docs/${name} no es una iniciativa: le faltan sus tres archivos. Si no lo es, decláralo en \`ignore\` de ${CONFIG_FILE}`,
-      );
+    if (INITIATIVE_FILES.every((f) => files.includes(f)))
+      fail(`docs/${name} es una iniciativa fuera de ${INITIATIVES_DIR}/: muévela a ${INITIATIVES_DIR}/${name}`);
   }
 
   const INI = `(?:${["architecture", ...initiatives].map(escapeRe).join("|")})`;
@@ -218,10 +225,10 @@ export function checkDocs(io, userConfig = {}) {
   // Un ID borrado deja sus citas apuntando a nada, y se siguen leyendo como si remitieran a algo. `home` es la
   // iniciativa del archivo: sin ella (CLAUDE.md) un ID sin prefijo es un ejemplo, no una cita.
   const registry = new Map();
-  const register = (name, files) => {
+  const register = (name, dir, files) => {
     const all = new Set();
     for (const f of files)
-      for (const re of DEFINED[f]) for (const m of read(`docs/${name}/${f}`).matchAll(re)) all.add(m[1]);
+      for (const re of DEFINED[f]) for (const m of read(`${dir}/${f}`).matchAll(re)) all.add(m[1]);
     registry.set(name, all);
   };
   const checkRefs = (file, rawText, home) => {
@@ -288,11 +295,11 @@ export function checkDocs(io, userConfig = {}) {
       else if (/^(N|RB)\d+$/.test(id) && row[3] !== "—") fail(`${file}: ${id} debería llevar "—" en el resumen`);
     }
   };
-  for (const ini of initiatives) register(ini, INITIATIVE_FILES);
-  register("architecture", ["notes.md"]);
+  for (const ini of initiatives) register(ini, `${INITIATIVES_DIR}/${ini}`, INITIATIVE_FILES);
+  register("architecture", "docs/architecture", ["notes.md"]);
 
   for (const ini of initiatives) {
-    const dir = `docs/${ini}`;
+    const dir = `${INITIATIVES_DIR}/${ini}`;
     const files = io.list(dir);
     // `assets` guarda las imágenes que la spec cita como referencia (fotos de un formato de papel).
     const extra = files.filter((f) => f !== "assets" && !INITIATIVE_FILES.includes(f));

@@ -15,6 +15,7 @@
 | ADR9  | ADR      | Una cita dentro de la iniciativa no nombra el archivo                      | 🟢 Accepted |
 | ADR10 | ADR      | El agente prueba todo lo que alcanza y nadie revisa su diff                | 🟢 Accepted |
 | ADR11 | ADR      | `Built` llega con el merge a la rama de trabajo, no con la integración     | 🟢 Accepted |
+| ADR12 | ADR      | Las iniciativas viven en `docs/initiatives/`                               | 🟢 Accepted |
 | TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -130,6 +131,21 @@ cuándo se integra. **Decisión:** la última. El paso 7 termina en la rama de t
 integración lo declara cada proyecto en `## Branches` de su `CLAUDE.md`. El precio: el método ya no garantiza
 que quien corre el checklist tenga el código de la fase. Si no la construyó él, la trae antes a su rama de
 trabajo, y un proyecto que no declare cuándo integra se queda sin regla.
+
+### ADR12 · Las iniciativas viven en `docs/initiatives/` · 🟢 Accepted (2026-10-09)
+
+**Contexto:** toda carpeta de `docs/` era una iniciativa salvo las reservadas y las declaradas en `ignore`. En
+un proyecto donde `docs/` crece —material de clientes, investigaciones, manuales—, las iniciativas quedaban
+mezcladas con lo demás y cada carpeta ajena había que declararla para que el vigilante no la tomara por una.
+**Alternativas:** dejarlo, que no le cuesta nada a un proyecto con pocas carpetas; aceptar las dos ubicaciones,
+que no obliga a mover nada pero deja dos sitios donde buscar una iniciativa; o una carpeta propia y el vigilante
+exigiéndola. **Decisión:** la última. Una iniciativa se descubre por dónde está, no por descarte: todo lo de
+`docs/initiatives/` lo es, y fuera de ahí nada se toma por una. `ignore` se conserva con un solo oficio, sacar
+una carpeta de la comprobación de rutas citadas, para que una configuración ya escrita siga cargando. Una cita
+no cambia, porque nombra la carpeta de la iniciativa y no su ruta. El precio es una versión mayor, la 7.0.0:
+cada proyecto mueve sus carpetas y reescribe las rutas que las nombran, que quedan un tramo más largas. Una
+iniciativa que se queda en `docs/` dejaría de vigilarse en silencio, así que el vigilante falla al verla y dice
+a dónde va.
 
 ## Tech debt
 

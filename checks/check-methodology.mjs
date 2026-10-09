@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 
 import { CHECKLIST_HEADINGS, NOTE_SECTIONS, ROADMAP_HEADINGS, STATES } from "../src/check-docs.js";
-import { DEFAULTS } from "../src/config.js";
+import { DEFAULTS, INITIATIVES_DIR, RESERVED } from "../src/config.js";
 
 const text = fs.readFileSync(new URL("../METHODOLOGY.md", import.meta.url), "utf8").replace(/\r\n/g, "\n");
 const template = (file) =>
@@ -78,6 +78,11 @@ for (const heading of ["## Branches", "## Verification"])
 // ---- los comandos que el método manda correr son los que el kit tiene
 for (const command of ["sddkit init", "sddkit new <initiative>", "npm run check:docs"])
   assert.ok(text.includes(command), `el método no nombra \`${command}\``);
+
+// ---- el vigilante solo descubre iniciativas en su carpeta y rechaza los nombres reservados: el método tiene que
+// decir dónde se crean y cómo no se llaman
+assert.ok(text.includes(`\`${INITIATIVES_DIR}/\``), `el método no dice que las iniciativas viven en ${INITIATIVES_DIR}/`);
+for (const name of RESERVED) assert.ok(text.includes(`\`${name}\``), `el método no nombra la carpeta reservada ${name}`);
 
 // ---- el vigilante lee las celdas por posición: quien añade una tabla a mano necesita el orden de las columnas
 // en el método. Sacarlo de las plantillas mantiene los tres en sintonía.

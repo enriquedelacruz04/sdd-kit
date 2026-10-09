@@ -6,7 +6,7 @@ comprueba que el molde se cumple.
 ## Instalar en un proyecto
 
 ```bash
-npm i -D github:enriquedelacruz04/sdd-kit#v6.0.0
+npm i -D github:enriquedelacruz04/sdd-kit#v7.0.0
 npx sddkit init
 npm run check:docs
 ```
@@ -20,7 +20,7 @@ que son las de ese proyecto.
 | Comando                   | Qué hace                                                                    |
 | ------------------------- | --------------------------------------------------------------------------- |
 | `sddkit init`             | Siembra el esqueleto                                                        |
-| `sddkit new <initiative>` | Crea `docs/<initiative>/` con sus tres archivos y la anota en el índice     |
+| `sddkit new <initiative>` | Crea `docs/initiatives/<initiative>/` con sus tres archivos y la anota      |
 | `sddkit check`            | Comprueba que `docs/` cumple el molde; sale con 1 si no                     |
 
 ## Configuración
@@ -29,7 +29,7 @@ que son las de ese proyecto.
 
 | Clave              | Qué controla                                      |
 | ------------------ | ------------------------------------------------- |
-| `ignore`           | Carpetas de `docs/` que no son iniciativas        |
+| `ignore`           | Carpetas de `docs/` que el vigilante no lee       |
 | `claudeHeadings`   | Títulos obligatorios del `CLAUDE.md` del proyecto |
 | `publicationWords` | Qué cuenta como hablar de publicación             |
 | `pathRoots`        | Raíces cuyas rutas citadas deben existir          |
@@ -44,7 +44,7 @@ Las reglas de la corrida ya están en el método, en "Cómo se corre un checklis
 prompt lleva solo los datos de esta corrida:
 
 ```text
-Corre los checklists 2 y 3 de docs/<initiative>/checklists.md, siguiendo entera la sección "Cómo se corre un
+Corre los checklists 2 y 3 de docs/initiatives/<initiative>/checklists.md, siguiendo entera la sección "Cómo se corre un
 checklist" del método.
 
 - Aplicación: http://localhost:5173

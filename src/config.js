@@ -2,8 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-// Carpetas de docs/ que nunca son iniciativas.
-export const RESERVED = ["architecture", "superpowers"];
+// Dónde viven las iniciativas: toda carpeta de aquí dentro lo es.
+export const INITIATIVES_DIR = "docs/initiatives";
+// Carpetas de docs/ que son del molde. Ninguna iniciativa se llama así: `architecture` es el nombre con el que se
+// citan las notas transversales, y `superpowers` se salta a cualquier profundidad al comprobar rutas.
+export const RESERVED = ["architecture", "initiatives", "superpowers"];
 export const INITIATIVE_FILES = ["roadmap.md", "checklists.md", "notes.md"];
 // .mjs y no .js: un proyecto sin "type": "module" no puede importar un .js con `export default`.
 export const CONFIG_FILE = "sdd.config.mjs";

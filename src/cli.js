@@ -4,7 +4,7 @@ import { newInitiative } from "./commands/new.js";
 
 const USAGE = `uso:
   sddkit init               siembra CLAUDE.md, AGENTS.md, la configuración y el esqueleto de docs/
-  sddkit new <initiative>   crea docs/<initiative>/ con roadmap.md, checklists.md y notes.md
+  sddkit new <initiative>   crea docs/initiatives/<initiative>/ con roadmap.md, checklists.md y notes.md
   sddkit check              comprueba que docs/ cumple el molde`;
 
 // Cada comando recibe por dónde escribir y devuelve su código de salida: así los arneses lo llaman sin lanzar

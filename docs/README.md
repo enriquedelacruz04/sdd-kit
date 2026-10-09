@@ -4,9 +4,9 @@
 `roadmap.md`.
 
 - `architecture/notes.md` — lo transversal, que no es de ninguna iniciativa
-- `kit-v1/` — la primera versión del kit: el método, las plantillas, el vigilante y la CLI
+- `initiatives/kit-v1/` — la primera versión del kit: el método, las plantillas, el vigilante y la CLI
 - `superpowers/specs/` — el diseño de cada fase, escrito antes de construirla
 - `superpowers/plans/` — el plan de tareas de cada diseño
 
-Cada carpeta de iniciativa tiene `roadmap.md` (dónde estamos), `checklists.md` (qué probar y qué salió) y
-`notes.md` (por qué las cosas son así).
+Cada carpeta de `initiatives/` es una iniciativa y tiene `roadmap.md` (dónde estamos), `checklists.md` (qué probar
+y qué salió) y `notes.md` (por qué las cosas son así).

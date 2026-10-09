@@ -61,7 +61,7 @@ const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "d
   // ---- lo que crea `sddkit new` también cumple el molde, y una segunda iniciativa no rompe a la primera
   assert.equal(newInitiative("billing-reports", ctx(dir)), 0);
   for (const file of ["roadmap.md", "checklists.md", "notes.md"])
-    assert.ok(fs.existsSync(path.join(dir, "docs/billing-reports", file)), `falta ${file}`);
+    assert.ok(fs.existsSync(path.join(dir, "docs/initiatives/billing-reports", file)), `falta ${file}`);
   assert.deepEqual(check(dir), []);
   assert.equal(newInitiative("onboarding", ctx(dir)), 0);
   assert.deepEqual(check(dir), []);
@@ -69,18 +69,18 @@ const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "d
   // ---- la iniciativa entra al índice, antes de las carpetas de superpowers, que cierran la lista
   const lines = read(dir, "docs/README.md").split(/\r?\n/);
   const at = (needle) => lines.findIndex((l) => l.startsWith(needle));
-  assert.ok(at("- `billing-reports/`") >= 0, "la iniciativa no está en docs/README.md");
-  assert.ok(at("- `billing-reports/`") < at("- `superpowers/"), "la iniciativa quedó después de superpowers");
+  assert.ok(at("- `initiatives/billing-reports/`") >= 0, "la iniciativa no está en docs/README.md");
+  assert.ok(at("- `initiatives/billing-reports/`") < at("- `superpowers/"), "la iniciativa quedó después de superpowers");
 
   // ---- el título sale del nombre, para que el archivo no nazca con un marcador sin sustituir
-  assert.ok(read(dir, "docs/billing-reports/roadmap.md").startsWith("# Billing reports — roadmap"));
+  assert.ok(read(dir, "docs/initiatives/billing-reports/roadmap.md").startsWith("# Billing reports — roadmap"));
   for (const file of ["roadmap.md", "checklists.md", "notes.md"])
-    assert.ok(!read(dir, `docs/billing-reports/${file}`).includes("{{"), `${file} conserva un marcador`);
+    assert.ok(!read(dir, `docs/initiatives/billing-reports/${file}`).includes("{{"), `${file} conserva un marcador`);
 
   // ---- un nombre que no es kebab minúscula rompería las citas, uno reservado chocaría con el molde y uno
   // repetido pisaría una iniciativa viva: los tres se rechazan sin crear nada
   const before2 = snapshot(dir);
-  for (const bad of ["Billing", "billing_reports", "-billing", "billing-", "architecture", "superpowers", "onboarding"]) {
+  for (const bad of ["Billing", "billing_reports", "-billing", "billing-", "architecture", "initiatives", "superpowers", "onboarding"]) {
     const c = ctx(dir);
     assert.equal(newInitiative(bad, c), 1, `aceptó "${bad}"`);
     assert.equal(c.errors.length, 1, `"${bad}" no dio un único mensaje`);
@@ -183,7 +183,7 @@ function rawPackage(text) {
   const c = ctx(dir);
   assert.equal(newInitiative("billing", c), 1);
   assert.match(c.errors[0], /sddkit init/);
-  assert.ok(!fs.existsSync(path.join(dir, "docs/billing")));
+  assert.ok(!fs.existsSync(path.join(dir, "docs/initiatives/billing")));
 }
 
 // ---- en Windows el índice suele tener CRLF: la línea nueva entra con el mismo final, sin mezclarlos
@@ -194,7 +194,7 @@ function rawPackage(text) {
   fs.writeFileSync(readme, fs.readFileSync(readme, "utf8").replace(/\r?\n/g, "\r\n"));
   assert.equal(newInitiative("billing", ctx(dir)), 0);
   const text = fs.readFileSync(readme, "utf8");
-  assert.ok(text.includes("- `billing/`"));
+  assert.ok(text.includes("- `initiatives/billing/`"));
   assert.ok(!/(?<!\r)\n/.test(text), "quedó un LF suelto en un archivo con CRLF");
   assert.deepEqual(check(dir), []);
 }
@@ -207,7 +207,7 @@ function rawPackage(text) {
   assert.equal(newInitiative("billing", ctx(dir)), 0);
   assert.equal(
     read(dir, "docs/README.md"),
-    "# Documentación\n\n- `architecture/notes.md` — lo transversal\n- `billing/` — descripción por escribir\n",
+    "# Documentación\n\n- `architecture/notes.md` — lo transversal\n- `initiatives/billing/` — descripción por escribir\n",
   );
 }
 

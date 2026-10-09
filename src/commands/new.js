@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { INITIATIVE_FILES, RESERVED } from "../config.js";
+import { INITIATIVE_FILES, INITIATIVES_DIR, RESERVED } from "../config.js";
 
 const TEMPLATES = fileURLToPath(new URL("../../templates/initiative/", import.meta.url));
 const KEBAB = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -18,7 +18,7 @@ export function newInitiative(name, { cwd, log, error }) {
     return 1;
   }
   if (RESERVED.includes(name)) {
-    error(`"${name}" es una carpeta reservada de docs/`);
+    error(`"${name}" es un nombre reservado del molde`);
     return 1;
   }
   const readme = path.join(cwd, "docs/README.md");
@@ -26,26 +26,27 @@ export function newInitiative(name, { cwd, log, error }) {
     error("no hay docs/README.md aquí: corre `sddkit init` en la raíz del proyecto");
     return 1;
   }
-  const dir = path.join(cwd, "docs", name);
+  const dir = path.join(cwd, INITIATIVES_DIR, name);
   if (fs.existsSync(dir)) {
-    error(`docs/${name} ya existe`);
+    error(`${INITIATIVES_DIR}/${name} ya existe`);
     return 1;
   }
 
   const words = name.replace(/-/g, " ");
   const title = words[0].toUpperCase() + words.slice(1);
-  fs.mkdirSync(dir);
+  // La carpeta de iniciativas no se siembra: nace con la primera.
+  fs.mkdirSync(dir, { recursive: true });
   for (const file of INITIATIVE_FILES) {
     const text = fs.readFileSync(path.join(TEMPLATES, file), "utf8").replaceAll("{{title}}", title);
     fs.writeFileSync(path.join(dir, file), text);
-    log(`  created  docs/${name}/${file}`);
+    log(`  created  ${INITIATIVES_DIR}/${name}/${file}`);
   }
 
   // La línea entra con el final de línea que ya tiene el índice: mezclarlos ensucia el diff en Windows.
   const text = fs.readFileSync(readme, "utf8");
   const eol = text.includes("\r\n") ? "\r\n" : "\n";
   const lines = text.split(/\r?\n/);
-  const entry = `- \`${name}/\` — descripción por escribir`;
+  const entry = `- \`initiatives/${name}/\` — descripción por escribir`;
   const superpowers = lines.findIndex((l) => l.startsWith("- `superpowers/"));
   const end = lines.at(-1) === "" ? lines.length - 1 : lines.length;
   lines.splice(superpowers < 0 ? end : superpowers, 0, entry);
