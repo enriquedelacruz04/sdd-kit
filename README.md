@@ -15,6 +15,50 @@ npm run check:docs
 añade el script `check:docs`. No pisa nada que ya exista. Después hay que llenar las secciones del `CLAUDE.md`,
 que son las de ese proyecto.
 
+## Migrar un proyecto que ya existe
+
+Los tres comandos de arriba se corren igual. Lo que cambia es que el proyecto ya trae su `CLAUDE.md` y su
+documentación, y `sddkit init` no los toca: llevarlos al molde es trabajo de un agente. El método no dice cómo se
+migra, así que el prompt lleva el procedimiento:
+
+```text
+Este proyecto acaba de instalar sdd-kit y todavía no sigue su método. Migra su documentación al molde.
+
+Lee entero node_modules/@enriquedelacruz04/sdd-kit/METHODOLOGY.md antes de empezar. Después:
+
+1. Haz el inventario: el CLAUDE.md, el AGENTS.md, todo lo que hay en docs/ y cualquier otro documento del repo
+   que hable de decisiones, pendientes, pruebas manuales o planes.
+2. Antes de mover o escribir nada, mándame un solo mensaje con:
+   - a dónde va cada documento según "Dónde va cada cosa", y cuáles se borran porque ya no son ciertos;
+   - qué iniciativas propones, con sus fases y el estado de cada una;
+   - qué no supiste clasificar.
+   Espera mi respuesta.
+3. CLAUDE.md: si ya existía, `sddkit init` no lo pisó. Ponle arriba la línea de import
+   `@node_modules/@enriquedelacruz04/sdd-kit/METHODOLOGY.md` y reparte lo que decía entre las siete secciones de
+   node_modules/@enriquedelacruz04/sdd-kit/templates/CLAUDE.md. Lo que repite al método se borra. Con el
+   AGENTS.md, lo mismo: que remita al método y al CLAUDE.md.
+4. Crea cada iniciativa con `npx sddkit new <initiative>` y llena sus tres archivos. Lo transversal va en
+   docs/architecture/notes.md. Mueve con `git mv` lo que se conserva, para no perder su historial.
+5. Corre `npm run check:docs` y corrige hasta que imprima `OK docs`.
+
+Reglas de la migración:
+
+- No inventes historia. Una decisión es un ADR solo si el repo dice qué se eligió y entre qué; su fecha sale de
+  git. Lo que no conste me lo preguntas o se queda fuera.
+- El estado de una fase es el de hoy. Un checklist que nadie corrió nace en `Not run`, aunque la pantalla lleve
+  meses en producción, y su fase no pasa de `Built`.
+- Solo es iniciativa el trabajo vivo o por verificar. Lo terminado hace tiempo deja, como mucho, sus decisiones
+  y su deuda en docs/architecture/notes.md.
+- Lo que no es una iniciativa —material de un cliente, una investigación— se queda en docs/, junto a
+  initiatives/. Si el vigilante falla por sus rutas, su carpeta va en `ignore` de sdd.config.mjs.
+- Una palabra con forma de ID que no lo es va en `notIds`; no la reescribas para esquivar al vigilante.
+- No toques el código ni hagas commit. Al terminar dime qué moviste, qué borraste y qué quedó por decidir.
+```
+
+El paso 2 es el que importa: el agente propone y el administrador decide qué es una iniciativa y en qué estado
+está cada fase, que es lo que el repo no siempre dice. Después de la migración quedan por llenar a mano las
+secciones del `CLAUDE.md` que el agente no pudo sacar de ningún documento.
+
 ## Comandos
 
 | Comando                   | Qué hace                                                                    |
