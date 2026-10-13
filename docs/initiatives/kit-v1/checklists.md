@@ -6,17 +6,19 @@ Necesitan una carpeta vacía fuera de este repo, el `.tgz` que produce `npm pack
 
 | #   | Checklist                  | Phase | Status     | Progress | Last run | Findings |
 | --- | -------------------------- | ----- | ---------- | -------- | -------- | -------- |
-| 1   | Un proyecto nuevo arranca  | PH1   | 🟢 Passed  | 6/6      | 2026-10-09 | 0        |
+| 1   | Un proyecto nuevo arranca  | PH1   | 🟠 Stale   | 6/6      | 2026-10-09 | 0        |
 
 ## Findings
 
 | ID  | Test case | Severity | Summary | Status |
 | --- | --------- | -------- | ------- | ------ |
 
-## Checklist 1 · Un proyecto nuevo arranca · 🟢 Passed
+## Checklist 1 · Un proyecto nuevo arranca · 🟠 Stale
 
 Verifica `PH1` con el paquete instalado de verdad, no con el código del repo: es lo que ningún arnés ve. Se
 repite si cambia lo que entra en el paquete, una plantilla o la línea que importa el método.
+
+**Retake:** all. La 8.0.0 cambia `METHODOLOGY.md` y el vigilante, que entran en el paquete (`ADR13`).
 
 ### A · Sembrar y vigilar
 

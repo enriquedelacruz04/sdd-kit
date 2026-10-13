@@ -60,6 +60,7 @@ for (const marker of [
   "**Expected:**",
   "**Failure to catch:**",
   "**Blocked:**",
+  "**Handoff:**",
   "**Retake:**",
   "**Gate:**",
   "**Origin:**",

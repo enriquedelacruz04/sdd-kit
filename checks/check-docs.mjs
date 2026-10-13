@@ -216,6 +216,41 @@ expectError(
   /1\.A2 está en Passed y conserva su \*\*Blocked:\*\*/,
 );
 
+// ---- lo que una corrida deja sin probar dice en el punto qué se intentó: es válido en un Not run a media corrida
+{
+  const file = "docs/initiatives/fake/checklists.md";
+  const half = {
+    ...VALID,
+    [file]: VALID[file]
+      .replace("| 🟢 Passed | 2/2", "| 🟡 Running | 1/2")
+      .replace("## Checklist 1 · Uno · 🟢 Passed", "## Checklist 1 · Uno · 🟡 Running")
+      .replace(
+        "- **1.A2** · 🟢 Passed · Hacer otra cosa.\n  En dos líneas.",
+        "- **1.A2** · ⚪ Not run · Hacer otra cosa.\n  **Handoff:** se intentó y falta el juicio de una persona.",
+      ),
+    "docs/initiatives/fake/roadmap.md": VALID["docs/initiatives/fake/roadmap.md"].replaceAll("🟢 Verified", "🟠 Built"),
+  };
+  assert.deepEqual(runFixture(half), [], "un Not run con su **Handoff:** a media corrida debería pasar");
+
+  // Sin correr no hubo intento que contar: el marcador ahí es un resto de otra corrida o un punto mal escrito.
+  expectError(
+    {
+      ...half,
+      [file]: half[file]
+        .replace("| 🟡 Running | 1/2", "| ⚪ Not run | 0/2")
+        .replace("## Checklist 1 · Uno · 🟡 Running", "## Checklist 1 · Uno · ⚪ Not run")
+        .replace("- **1.A1** · 🟢 Passed", "- **1.A1** · ⚪ Not run"),
+    },
+    /el checklist 1 está en Not run y 1\.A2 lleva \*\*Handoff:\*\*/,
+  );
+}
+
+// ---- un relevo que sobrevive a la prueba del punto sigue diciendo que falta algo que ya se hizo
+expectError(
+  withDefect("docs/initiatives/fake/checklists.md", "En dos líneas.", "En dos líneas. **Handoff:** falta mirarlo."),
+  /1\.A2 está en Passed y conserva su \*\*Handoff:\*\*/,
+);
+
 // ---- un punto que falló sin hallazgo pierde qué pasó y quién lo cierra
 expectError(
   withDefect("docs/initiatives/fake/checklists.md", "- **1.A2** · 🟢 Passed", "- **1.A2** · 🔴 Failed"),

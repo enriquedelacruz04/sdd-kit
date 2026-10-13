@@ -16,6 +16,7 @@
 | ADR10 | ADR      | El agente prueba todo lo que alcanza y nadie revisa su diff                | 🟢 Accepted |
 | ADR11 | ADR      | `Built` llega con el merge a la rama de trabajo, no con la integración     | 🟢 Accepted |
 | ADR12 | ADR      | Las iniciativas viven en `docs/initiatives/`                               | 🟢 Accepted |
+| ADR13 | ADR      | Lo que una corrida deja sin probar se explica en el punto, con `**Handoff:**` | 🟢 Accepted |
 | TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -146,6 +147,20 @@ no cambia, porque nombra la carpeta de la iniciativa y no su ruta. El precio es 
 cada proyecto mueve sus carpetas y reescribe las rutas que las nombran, que quedan un tramo más largas. Una
 iniciativa que se queda en `docs/` dejaría de vigilarse en silencio, así que el vigilante falla al verla y dice
 a dónde va.
+
+### ADR13 · Lo que una corrida deja sin probar se explica en el punto, con `**Handoff:**` · 🟢 Accepted (2026-10-13)
+
+**Contexto:** al correr un checklist, el agente dejaba en `Not run` lo que no podía comprobar entero y decía qué
+había intentado solo en su reporte. En la primera corrida de un checklist de teléfono en Cappi, tres puntos
+quedaron así y su porqué vivió únicamente en la conversación: justo lo que el molde existe para evitar.
+**Alternativas:** dejarlo en el reporte; reusar `Blocked`, que mezcla "hoy nadie lo tiene" con "lo puede probar
+otra persona"; un marcador de nota libre en cualquier punto, que serviría también para un `Passed` dudoso pero
+invita a anotar todos, cuando lo que parece fallar ya tiene su sitio en un hallazgo; o un marcador solo para el
+punto que queda en `Not run`. **Decisión:** el último, `**Handoff:**`, que se borra al probar el punto. No se
+llama `Pending` porque ese ya es un estado de fase. El vigilante comprueba que no sobreviva a la prueba ni
+aparezca en un checklist sin correr. El precio: cambia una regla del método, así que es una versión mayor, la
+8.0.0, y el vigilante no puede exigir el marcador, porque a media corrida no distingue el punto que se dejó del
+que todavía no se alcanza.
 
 ## Tech debt
 

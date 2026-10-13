@@ -4,6 +4,21 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 8.0.0
+
+Cambia una regla del método: lo que una corrida deja sin probar se explica en el punto, no en el reporte
+(`kit-v1` `ADR13`). Un punto que queda en `Not run` después de intentarlo, o que se le deja a otra persona, lleva
+una nota `**Handoff:**` que dice qué se intentó y qué le falta a quien lo retome; se borra cuando el punto se
+prueba. El agente que corre un checklist escribe ahí lo que antes solo decía en su reporte, que se perdía con la
+conversación.
+
+El vigilante falla si un punto que ya no está en `Not run` conserva su `**Handoff:**`, y si lo lleva un punto de
+un checklist que no se ha corrido. No exige el marcador: a media corrida hay puntos a los que todavía no se
+llega.
+
+**Migración:** ningún documento deja de pasar, salvo que ya usara el texto `**Handoff:**` en un punto probado.
+Los puntos que una corrida anterior dejó en `Not run` se pueden anotar a mano; no es obligatorio.
+
 ## 7.0.0
 
 Las iniciativas viven en `docs/initiatives/`, no directamente en `docs/` (`kit-v1` `ADR12`). Toda carpeta de

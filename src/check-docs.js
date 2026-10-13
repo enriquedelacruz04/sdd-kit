@@ -401,6 +401,11 @@ export function checkDocs(io, userConfig = {}) {
         const reason = body.includes("**Blocked:**");
         if (st === "Blocked" && !reason) fail(`${ini}: ${id} está en Blocked sin decir por qué con **Blocked:**`);
         if (st !== "Blocked" && reason) fail(`${ini}: ${id} está en ${st} y conserva su **Blocked:**`);
+        // El relevo cuenta qué intentó una corrida con un punto que dejó sin probar: probado, o sin corrida, miente.
+        const handoff = body.includes("**Handoff:**");
+        if (st !== "Not run" && handoff) fail(`${ini}: ${id} está en ${st} y conserva su **Handoff:**`);
+        if (head === "Not run" && handoff)
+          fail(`${ini}: el checklist ${n} está en Not run y ${id} lleva **Handoff:**: todavía no se ha corrido`);
       }
       if (!found) fail(`${ini}: el checklist ${n} no tiene puntos con ID`);
       // Sin su tabla, el primer hallazgo del checklist no tiene dónde escribirse y acaba inventando su formato.

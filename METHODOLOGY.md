@@ -100,8 +100,8 @@ Un punto de checklist se escribe en una línea, con su ID, su estado y la acció
   que se busca aunque lo esperado parezca cumplirse.
 ```
 
-Los marcadores son `**Expected:**`, `**Failure to catch:**` y `**Blocked:**` en un punto, `**Retake:**` y `**Gate:**`
-en la introducción de un checklist y `**Origin:**` en una deuda.
+Los marcadores son `**Expected:**`, `**Failure to catch:**`, `**Blocked:**` y `**Handoff:**` en un punto, `**Retake:**`
+y `**Gate:**` en la introducción de un checklist y `**Origin:**` en una deuda.
 
 Un checklist que es un Gate lo dice en su introducción, con un párrafo aparte que empieza por `**Gate:**` y nombra
 qué desbloquea. Con esa marca, el vigilante falla si el checklist pasa a `Stale`:
@@ -190,6 +190,8 @@ Qué estados tiene cada término está en el glosario. Aquí va cómo se escribe
 - La columna `Progress` del resumen cuenta los puntos en `Passed` sobre el total.
 - Un punto `Blocked` no se pudo probar y dice por qué con **Blocked:**; uno `Failed` tiene un hallazgo que lo
   cita.
+- Un punto que una corrida deja en `Not run` dice con **Handoff:** qué se intentó y qué le falta a quien lo
+  retome. El marcador se borra cuando el punto se prueba, y no existe en un checklist que no se ha corrido.
 
 **En `roadmap.md`, los de una fase:**
 
@@ -246,8 +248,8 @@ deja de ser cierto, en el resumen de las fases.
    | `Running` | Los `Not run` y los `Blocked`                                                          |
    | `Passed`  | Ninguno: no se corre hasta que pase a `Stale`                                          |
 
-   Al empezar un `Stale`, los puntos de su **Retake:** vuelven a `⚪ Not run` y pierden su **Blocked:** si lo
-   tenían. La línea **Retake:** no se borra hasta el paso 6.
+   Al empezar un `Stale`, los puntos de su **Retake:** vuelven a `⚪ Not run` y pierden su **Blocked:** o su
+   **Handoff:** si lo tenían. La línea **Retake:** no se borra hasta el paso 6.
 
    Un `Failed` vuelve a probarse solo cuando su arreglo lo pone en el **Retake:** (ver "Cuando un hallazgo se
    cierra").
@@ -260,8 +262,13 @@ deja de ser cierto, en el resumen de las fases.
    - **No se cumple** → `🔴 Failed`, y se abre un hallazgo (ver "Cómo se abre un hallazgo").
    - **No se puede probar**, porque falta algo que hoy nadie tiene (datos, una cuenta, una build) →
      `🟡 Blocked`, con una nota **Blocked:** que dice qué falta.
+   - **Se intentó y no se pudo comprobar entero, o se le deja a otra persona** → sigue en `⚪ Not run`, con una
+     nota **Handoff:** que dice qué se intentó y qué le falta a quien lo retome. Sin la nota, el porqué se queda
+     en la conversación de quien corrió y se pierde con ella.
    - **Algo falla, o parece fallar, sin que ningún punto lo cubra** → se abre un hallazgo en la tabla del
      checklist que se estaba corriendo, con una raya (`—`) en `Test case`.
+   Al probar un punto que traía **Blocked:** o **Handoff:**, la nota se borra.
+
 5. Actualizar `Progress` y `Findings` en el resumen de los checklists.
 
 ### Al terminar la corrida
@@ -309,11 +316,11 @@ autoriza escrituras.
   script en la página ni por una lectura de la base de datos, salvo que el **Expected:** lo pida.
 - **Prueba todo lo que está a su alcance.** Un juicio visual lo hace sobre una captura de pantalla, un archivo
   descargado lo abre, y la vista de teléfono la emula en el navegador. Lo que aun así no puede comprobar entero
-  lo deja en `⚪ Not run`, nunca en `Blocked`, y dice qué intentó.
+  lo deja en `⚪ Not run`, nunca en `Blocked`, y escribe en el punto qué intentó, con **Handoff:**.
 - **Escribe solo con permiso, y lo pide siempre.** Para crear, guardar o borrar necesita que el administrador lo
   autorice. Si un punto lo necesita y el prompt no lo autoriza, pide el permiso antes de empezar. Con él, usa
   registros de prueba que se reconozcan por su nombre y los borra al terminar; sin él, el punto se queda en
-  `Not run`.
+  `Not run`, y su **Handoff:** dice que faltó el permiso.
 - **Pregunta antes de empezar.** Entre los pasos 2 y 3, busca en la aplicación lo que piden los puntos que va a
   probar y le manda al administrador un solo mensaje, aunque no le falte nada, con:
   - qué le falta y qué puntos lo necesitan: requisitos, datos, una cuenta con otro rol, permiso para escribir;
@@ -321,23 +328,23 @@ autoriza escrituras.
   - qué checklists no correrá, por estar en `Passed` o ser un Gate.
 
   Espera la respuesta. Lo que el administrador dice que no existe deja sus puntos en `Blocked`, con eso en su
-  **Blocked:**; lo que prefiere probar él, en `Not run`.
+  **Blocked:**; lo que prefiere probar él, en `Not run`, con eso en su **Handoff:**.
 
 - **Decide solo.** Marca `Passed`, abre hallazgos y pasa la fase a `Verified` cuando toca (paso 6), sin pedir
-  confirmación. Si duda de un punto, lo deja en `Not run` y explica por qué.
+  confirmación. Si duda de un punto, lo deja en `Not run` y explica por qué en su **Handoff:**.
 - **Solo edita el `checklists.md` y el roadmap de la iniciativa, y no hace commit.** Un fallo se registra como
   hallazgo; el código no se toca.
 - **Al terminar**, apaga la aplicación si la levantó él y reporta:
   - qué puntos probó y cómo salieron;
   - qué hallazgos abrió y qué fases pasó a `Verified`;
-  - qué dejó en `Blocked` o en `Not run`, y por qué;
+  - qué dejó en `Blocked` o en `Not run`: el porqué ya está escrito en cada punto, y el reporte solo lo resume;
   - qué registros de prueba creó y si los borró;
   - si `npm run check:docs` pasó.
 
 ### Cuando el agente termina
 
 El administrador prueba los puntos que el agente le dejó en `Not run`, si los hay (pasos 4 a 6), y termina con
-el paso 7.
+el paso 7. El **Handoff:** de cada uno dice qué intentó el agente y qué falta.
 
 ### Cuando un hallazgo se cierra
 
