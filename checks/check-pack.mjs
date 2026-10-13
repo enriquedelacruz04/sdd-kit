@@ -12,7 +12,10 @@ assert.deepEqual(pkg.devDependencies ?? {}, {});
 
 // `npm pack --dry-run` dice qué entraría en el paquete sin crearlo. Los arneses corren contra el repo, donde
 // todo existe: un archivo que falta en "files" solo se nota en el proyecto que instala el kit.
-const [{ files }] = JSON.parse(execSync("npm pack --dry-run --json", { cwd: root, encoding: "utf8" }));
+// npm 12 cambió la forma de la salida: antes era una lista de paquetes y ahora es un objeto con el nombre del
+// paquete por clave. Se aceptan las dos, porque el arnés corre con el npm que tenga quien lo ejecuta.
+const report = JSON.parse(execSync("npm pack --dry-run --json", { cwd: root, encoding: "utf8" }));
+const { files } = Array.isArray(report) ? report[0] : report[pkg.name];
 const packed = new Set(files.map((f) => f.path.replace(/\\/g, "/")));
 
 // ---- lo que un proyecto necesita en node_modules: el método que importa su CLAUDE.md, el binario, el código
