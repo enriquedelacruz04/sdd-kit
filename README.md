@@ -6,10 +6,20 @@ comprueba que el molde se cumple.
 ## Instalar en un proyecto
 
 ```bash
-npm i -D github:enriquedelacruz04/sdd-kit#v7.0.0
+npm i -D github:enriquedelacruz04/sdd-kit#v8.0.0
 npx sddkit init
 npm run check:docs
 ```
+
+Desde npm 12, una dependencia que viene de un repositorio de git se rechaza por defecto, con el error
+`EALLOWGIT`. El proyecto la permite con un archivo `.npmrc` en su raíz, que se sube al repo para que la
+instalación funcione igual en un clon nuevo:
+
+```ini
+allow-git=all
+```
+
+Con `allow-git=root` la primera instalación y `npm ci` pasan, pero subir de versión falla.
 
 `sddkit init` siembra `CLAUDE.md`, `AGENTS.md`, `sdd.config.mjs`, `docs/README.md` y `docs/architecture/notes.md`, y
 añade el script `check:docs`. No pisa nada que ya exista. Después hay que llenar las secciones del `CLAUDE.md`,
@@ -103,8 +113,8 @@ la respuesta.
 
 ## Subir de versión
 
-Cambia el tag en `package.json` y corre `npm install`. `CHANGELOG.md` dice qué cambia en cada versión y, en una
-mayor, cómo migrar la documentación.
+Cambia el tag en `package.json` y corre `npm install`; con npm 12 hace falta el `.npmrc` de arriba.
+`CHANGELOG.md` dice qué cambia en cada versión y, en una mayor, cómo migrar la documentación.
 
 ## Desarrollo
 
