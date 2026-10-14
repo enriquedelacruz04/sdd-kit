@@ -36,7 +36,7 @@ const check = (dir) => checkDocs(realIo(dir), DEFAULTS);
 
 // La línea que carga el método en cada proyecto. Se escribe aquí y no se lee de la plantilla: es lo que la fija.
 const IMPORT_LINE = "@node_modules/@enriquedelacruz04/sdd-kit/METHODOLOGY.md";
-const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "docs/architecture/notes.md"];
+const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", ".npmrc", "docs/README.md", "docs/architecture/notes.md"];
 
 // ---- lo que siembra `sddkit init` cumple el molde sin tocar nada: si no, el primer `sddkit check` de un proyecto
 // nuevo falla y nadie sabe si el defecto es suyo o del kit
@@ -99,6 +99,32 @@ const SEEDED = ["CLAUDE.md", "AGENTS.md", "sdd.config.mjs", "docs/README.md", "d
   assert.equal(init(ctx(dir)), 0);
   assert.equal(read(dir, "CLAUDE.md"), "# Lo mío\n");
   assert.ok(fs.existsSync(path.join(dir, "docs/README.md")));
+}
+
+// ---- el kit se instala desde git, y npm 12 lo rechaza si el proyecto no lo permite: sin esta línea, un clon nuevo
+// no puede instalar sus dependencias
+{
+  const dir = project();
+  assert.equal(init(ctx(dir)), 0);
+  assert.ok(read(dir, ".npmrc").split(/\r?\n/).includes("allow-git=all"), "el .npmrc sembrado no permite git");
+}
+
+// ---- un .npmrc que ya existía es del proyecto y puede llevar un token: no se pisa ni se le añade nada, pero init
+// dice qué línea le falta. Si ya la tiene, con el valor que sea, no dice nada
+{
+  const dir = project();
+  fs.writeFileSync(path.join(dir, ".npmrc"), "save-exact=true\n");
+  const c = ctx(dir);
+  assert.equal(init(c), 0);
+  assert.equal(read(dir, ".npmrc"), "save-exact=true\n");
+  assert.ok(c.logs.includes("  exists   .npmrc: añade a mano la línea allow-git=all"));
+
+  const own = project();
+  fs.writeFileSync(path.join(own, ".npmrc"), "save-exact=true\r\nallow-git = root\r\n");
+  const c2 = ctx(own);
+  assert.equal(init(c2), 0);
+  assert.equal(read(own, ".npmrc"), "save-exact=true\r\nallow-git = root\r\n");
+  assert.ok(c2.logs.includes("  exists   .npmrc"));
 }
 
 // ---- un script check:docs que el proyecto ya definió a su manera se respeta, junto con sus otros scripts

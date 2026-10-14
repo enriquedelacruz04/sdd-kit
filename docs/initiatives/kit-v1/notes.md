@@ -17,6 +17,7 @@
 | ADR11 | ADR      | `Built` llega con el merge a la rama de trabajo, no con la integración     | 🟢 Accepted |
 | ADR12 | ADR      | Las iniciativas viven en `docs/initiatives/`                               | 🟢 Accepted |
 | ADR13 | ADR      | Lo que una corrida deja sin probar se explica en el punto, con `**Handoff:**` | 🟢 Accepted |
+| ADR14 | ADR      | `sddkit init` siembra el `.npmrc` que permite la dependencia de git        | 🟢 Accepted |
 | TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -161,6 +162,21 @@ llama `Pending` porque ese ya es un estado de fase. El vigilante comprueba que n
 aparezca en un checklist sin correr. El precio: cambia una regla del método, así que es una versión mayor, la
 8.0.0, y el vigilante no puede exigir el marcador, porque a media corrida no distingue el punto que se dejó del
 que todavía no se alcanza.
+
+### ADR14 · `sddkit init` siembra el `.npmrc` que permite la dependencia de git · 🟢 Accepted (2026-10-13)
+
+**Contexto:** desde npm 12, `allow-git` vale `none` por defecto y una dependencia que viene de un repositorio de
+git se rechaza con `EALLOWGIT`. El kit se instala así (`ADR1`), de modo que al subir cuatro proyectos a la 8.0.0
+ninguno pudo instalarla sin pasar la opción a mano, y un clon nuevo de cualquiera tampoco habría instalado sus
+dependencias. **Alternativas:** decirlo solo en el `README.md`, que deja el arreglo a la memoria de quien instala;
+publicar el paquete en el registro de npm, que quita el problema de raíz pero cambia cómo se distribuye el kit;
+que `init` añada la línea a un `.npmrc` que ya existe, que es editar un archivo del proyecto que puede llevar un
+token; sembrar `allow-git=root`, el valor más estricto; o sembrar `allow-git=all` solo cuando el archivo no
+existe. **Decisión:** la última. `root` se descartó porque, probado con npm 12.2.0, deja pasar la primera
+instalación y `npm ci` pero rechaza la subida de versión. Un `.npmrc` que ya existe no se toca: si no declara
+`allow-git`, `init` dice qué línea añadir. El precio: `all` permite cualquier dependencia de git del proyecto,
+también las transitivas, y la primera instalación sigue necesitando `--allow-git=all`, porque `init` corre después
+de instalar el kit.
 
 ## Tech debt
 

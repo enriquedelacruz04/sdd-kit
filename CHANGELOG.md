@@ -4,6 +4,16 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 8.1.0
+
+`sddkit init` siembra también un `.npmrc` con `allow-git=all` (`kit-v1` `ADR14`). Desde npm 12, una
+dependencia que viene de un repositorio de git se rechaza por defecto con `EALLOWGIT`, y el kit se instala así:
+sin esa línea, un clon nuevo del proyecto no puede instalar sus dependencias ni subir el kit de versión. Un
+`.npmrc` que ya existe no se toca; si no declara `allow-git`, `init` dice qué línea añadir.
+
+Un proyecto que ya usa el kit corre `npx sddkit init` otra vez, que solo crea lo que falta, o escribe la línea a
+mano.
+
 ## 8.0.0
 
 Cambia una regla del método: lo que una corrida deja sin probar se explica en el punto, no en el reporte

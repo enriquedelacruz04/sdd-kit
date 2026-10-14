@@ -33,6 +33,7 @@ const REQUIRED_MISSING = [
   "templates/CLAUDE.md",
   "templates/AGENTS.md",
   "templates/sdd.config.mjs",
+  "templates/npmrc",
   "templates/docs/README.md",
   "templates/docs/architecture/notes.md",
   "templates/initiative/roadmap.md",

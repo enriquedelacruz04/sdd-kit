@@ -4,9 +4,12 @@ import { fileURLToPath } from "node:url";
 
 import { CONFIG_FILE } from "../config.js";
 
+const NPMRC = ".npmrc";
 const TEMPLATES = fileURLToPath(new URL("../../templates/", import.meta.url));
 // Plantilla y destino coinciden: lo que se siembra es una copia literal.
-const FILES = ["CLAUDE.md", "AGENTS.md", CONFIG_FILE, "docs/README.md", "docs/architecture/notes.md"];
+const FILES = ["CLAUDE.md", "AGENTS.md", CONFIG_FILE, NPMRC, "docs/README.md", "docs/architecture/notes.md"];
+// La excepción: npm nunca empaqueta un archivo llamado .npmrc, así que su plantilla viaja sin el punto.
+const TEMPLATE_OF = { [NPMRC]: "npmrc" };
 const SCRIPT = "check:docs";
 
 // El package.json es del usuario: se conserva su formato para que añadir un script sea un diff de una línea.
@@ -22,11 +25,13 @@ export function init({ cwd, log }) {
     const target = path.join(cwd, file);
     // Lo que ya existe es del proyecto: se informa y se sigue, nunca se pisa.
     if (fs.existsSync(target)) {
-      log(`  exists   ${file}`);
+      // Un .npmrc que no permite la dependencia de git deja al proyecto sin poder reinstalar el kit con npm 12.
+      const hint = file === NPMRC && !/^\s*allow-git\s*=/m.test(fs.readFileSync(target, "utf8"));
+      log(hint ? `  exists   ${file}: añade a mano la línea allow-git=all` : `  exists   ${file}`);
       continue;
     }
     fs.mkdirSync(path.dirname(target), { recursive: true });
-    fs.copyFileSync(path.join(TEMPLATES, file), target);
+    fs.copyFileSync(path.join(TEMPLATES, TEMPLATE_OF[file] ?? file), target);
     log(`  created  ${file}`);
   }
 

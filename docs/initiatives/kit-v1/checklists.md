@@ -6,24 +6,27 @@ Necesitan una carpeta vacía fuera de este repo, el `.tgz` que produce `npm pack
 
 | #   | Checklist                  | Phase | Status     | Progress | Last run | Findings |
 | --- | -------------------------- | ----- | ---------- | -------- | -------- | -------- |
-| 1   | Un proyecto nuevo arranca  | PH1   | 🟢 Passed  | 6/6      | 2026-10-13 | 0        |
+| 1   | Un proyecto nuevo arranca  | PH1   | 🟠 Stale   | 6/6      | 2026-10-13 | 0        |
 
 ## Findings
 
 | ID  | Test case | Severity | Summary | Status |
 | --- | --------- | -------- | ------- | ------ |
 
-## Checklist 1 · Un proyecto nuevo arranca · 🟢 Passed
+## Checklist 1 · Un proyecto nuevo arranca · 🟠 Stale
 
 Verifica `PH1` con el paquete instalado de verdad, no con el código del repo: es lo que ningún arnés ve. Se
 repite si cambia lo que entra en el paquete, una plantilla o la línea que importa el método.
+
+**Retake:** `1.A1`, `1.A3`. La 8.1.0 hace que `sddkit init` siembre también el `.npmrc` (`ADR14`).
 
 ### A · Sembrar y vigilar
 
 - **1.A1** · 🟢 Passed · En una carpeta vacía, correr `npm init -y`, instalar el `.tgz` con `npm i -D`, y luego
   `npx sddkit init` y `npm run check:docs`. **Expected:** existen `CLAUDE.md`, `AGENTS.md`, `sdd.config.mjs`,
-  `docs/README.md` y `docs/architecture/notes.md`, y el último comando imprime `OK docs`. **Failure to catch:** que
-  `npx sddkit` no encuentre el binario en Windows.
+  `.npmrc` con la línea `allow-git=all`, `docs/README.md` y `docs/architecture/notes.md`, y el último comando
+  imprime `OK docs`. **Failure to catch:** que `npx sddkit` no encuentre el binario en Windows, o que el `.npmrc` no
+  llegue porque npm no empaqueta su plantilla.
 - **1.A2** · 🟢 Passed · Correr `npx sddkit new billing` y otra vez `npm run check:docs`. **Expected:** aparecen los
   tres archivos de `docs/initiatives/billing/` y su línea en `docs/README.md`, y sale `OK docs` sin editar nada a
   mano.

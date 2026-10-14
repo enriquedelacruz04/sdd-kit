@@ -1,0 +1,3 @@
+; sdd-kit se instala desde su repositorio de git, y desde npm 12 una dependencia así se rechaza si el proyecto no
+; la permite. Con `root` la instalación pasa, pero subir de versión falla.
+allow-git=all
