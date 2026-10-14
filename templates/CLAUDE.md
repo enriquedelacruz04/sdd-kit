@@ -28,6 +28,9 @@ Cómo se organiza el código, dónde va cada cosa y qué no se hace.
 
 Los comandos que verifican el proyecto —el paso 6 del método corre estos— y qué no ve ninguno de ellos.
 
+Cómo corre un agente un checklist: con qué maneja la aplicación —el navegador con un MCP o, si la aplicación es
+móvil, el dispositivo físico conectado a la computadora—, con qué comando la levanta y dónde guarda la sesión.
+
 ## Known pitfalls
 
 Una línea por trampa que ya se pagó, con la cita a la nota que cuenta la historia.

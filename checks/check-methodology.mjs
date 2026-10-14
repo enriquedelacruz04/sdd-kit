@@ -15,6 +15,7 @@ for (const [pattern, what] of [
   [/mantine/i, "Mantine"],
   [/espejo/i, "el espejo"],
   [/chrome-devtools|5173/, "el entorno de Cappi"],
+  [/\badb\b|android|\bios\b|\bexpo\b/i, "la herramienta de un dispositivo concreto"],
   [/notas\.md|`arquitectura`/, "un nombre de archivo o carpeta del molde viejo"],
   [/Esperado:|Fallo a cazar|Bloqueado:|Retomar/, "un marcador del molde viejo"],
   [/Resumen de las fases|Índice de fases|Orden de ejecución|Hallazgos del checklist/, "un título del molde viejo"],
@@ -75,6 +76,15 @@ for (const heading of DEFAULTS.claudeHeadings)
   assert.ok(template("CLAUDE.md").includes(`\n${heading}\n`), `la plantilla de CLAUDE.md no tiene "${heading}"`);
 for (const heading of ["## Branches", "## Verification"])
   assert.ok(text.includes(`\`${heading}\``), `el método no remite a "${heading}" del proyecto`);
+
+// ---- el agente maneja la aplicación con lo que declara el proyecto. Si el método solo hablara del navegador, el
+// de una app móvil la emularía teniendo el teléfono conectado; si la plantilla no lo pidiera, ningún proyecto
+// sabría que tiene que declararlo (kit-v1 ADR15)
+for (const [where, content] of [
+  ["el método", text],
+  ["la plantilla de CLAUDE.md", template("CLAUDE.md")],
+])
+  assert.ok(content.includes("dispositivo físico conectado"), `${where} no prevé el dispositivo de una app móvil`);
 
 // ---- los comandos que el método manda correr son los que el kit tiene
 for (const command of ["sddkit init", "sddkit new <initiative>", "npm run check:docs"])

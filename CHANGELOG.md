@@ -4,6 +4,18 @@ Una versión mayor es una en la que documentación antes válida deja de pasar `
 regla del método; lleva su nota de migración. Una menor añade comprobaciones que solo cazan lo que ya era un
 error, comandos o plantillas. Un parche corrige.
 
+## 9.0.0
+
+Cambia una regla del método: el agente que corre un checklist maneja la aplicación con la herramienta que declara
+`## Verification` del `CLAUDE.md` del proyecto, que es el navegador con un MCP o, si la aplicación es móvil, un
+dispositivo físico conectado a la computadora (`kit-v1` `ADR15`). Antes de empezar confirma que esa herramienta
+responde, usa la sesión que ya guarda, y una pantalla de teléfono la prueba en el dispositivo; solo la emula en el
+navegador si el proyecto no declara ninguno. La plantilla de `CLAUDE.md` pide declararlo en `## Verification`.
+
+**Migración:** el vigilante no cambia y ningún documento deja de pasar. Un proyecto con aplicación móvil declara
+en `## Verification` de su `CLAUDE.md` el dispositivo con el que el agente la maneja, cómo la levanta y dónde
+guarda la sesión. Uno con aplicación web declara ahí el MCP del navegador, si no lo hacía ya.
+
 ## 8.1.0
 
 `sddkit init` siembra también un `.npmrc` con `allow-git=all` (`kit-v1` `ADR14`). Desde npm 12, una

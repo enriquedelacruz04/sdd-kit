@@ -18,6 +18,7 @@
 | ADR12 | ADR      | Las iniciativas viven en `docs/initiatives/`                               | 🟢 Accepted |
 | ADR13 | ADR      | Lo que una corrida deja sin probar se explica en el punto, con `**Handoff:**` | 🟢 Accepted |
 | ADR14 | ADR      | `sddkit init` siembra el `.npmrc` que permite la dependencia de git        | 🟢 Accepted |
+| ADR15 | ADR      | El agente maneja la aplicación con la herramienta que declara el proyecto  | 🟢 Accepted |
 | TD1   | Debt     | Una palabra con forma de ID no tiene escapatoria                           | 🟢 Resolved |
 | TD2   | Debt     | Una lista numerada en la introducción de un checklist se toma por un punto | 🟢 Resolved |
 | TD3   | Debt     | `ignore` solo acepta nombres de carpeta                                    | 🟢 Resolved |
@@ -177,6 +178,21 @@ instalación y `npm ci` pero rechaza la subida de versión. Un `.npmrc` que ya e
 `allow-git`, `init` dice qué línea añadir. El precio: `all` permite cualquier dependencia de git del proyecto,
 también las transitivas, y la primera instalación sigue necesitando `--allow-git=all`, porque `init` corre después
 de instalar el kit.
+
+### ADR15 · El agente maneja la aplicación con la herramienta que declara el proyecto · 🟢 Accepted (2026-10-14)
+
+**Contexto:** el método suponía que el agente que corre un checklist siempre maneja un navegador con un MCP, y que
+una pantalla de teléfono se emula en él (`ADR10`). En Cappi, un agente corrió el checklist de la app móvil
+manejando un teléfono conectado por USB, con capturas de pantalla, volcado de la interfaz y toques: funcionó, pero
+fuera de lo que el método prevé. **Alternativas:** dejarlo como está, que obliga a emular lo que se puede probar
+en el teléfono de verdad o a correr el checklist al margen del método; nombrar en el método una herramienta
+concreta, que lo ata a un sistema operativo cuando `METHODOLOGY.md` no nombra el entorno de ningún proyecto; o que
+cada proyecto declare con qué maneja el agente la aplicación. **Decisión:** la última. El método dice que la
+herramienta es el navegador con un MCP o, si la aplicación es móvil, un dispositivo físico conectado a la
+computadora, y remite a `## Verification` del `CLAUDE.md`, que la plantilla pide llenar. Una pantalla de teléfono
+se prueba en el dispositivo y solo se emula si el proyecto no declara ninguno. El precio: cambia una regla del
+método, así que es una versión mayor, la 9.0.0, aunque ningún documento deja de pasar; y el vigilante no puede
+comprobar que un proyecto con aplicación móvil declare su dispositivo, porque no sabe qué aplicación tiene.
 
 ## Tech debt
 
