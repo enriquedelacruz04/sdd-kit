@@ -227,9 +227,9 @@ Qué estados tiene cada término está en el glosario. Aquí va cómo se escribe
 
 Un checklist se corre cuando su fase está en `Built`. Se corre sobre la rama de trabajo de quien lo corre, la
 que declara `## Branches` del `CLAUDE.md`, con la fase ya en ella. Lo corre el administrador o un agente que
-maneja la aplicación con la herramienta que declara `## Verification` del `CLAUDE.md`: el navegador con un MCP o,
-si la aplicación es móvil, un dispositivo físico conectado a la computadora. Un Gate lo corre solo el
-administrador.
+maneja la aplicación con la herramienta que le indica su prompt o, si no indica ninguna, la que declara
+`## Verification` del `CLAUDE.md`: el navegador con un MCP o, si la aplicación es móvil, un dispositivo físico
+conectado a la computadora. Un Gate lo corre solo el administrador.
 
 Cada cambio de estado se escribe en todos los sitios donde aparece: el de un checklist, en su título y en el
 resumen de los checklists; el de una fase, en el roadmap: en su título, en el índice de fases y, si lo que dice
@@ -303,12 +303,13 @@ La severidad es una de tres:
 ### Lo que cambia para un agente
 
 El agente lee entera la sección "Cómo se corre un checklist" antes de empezar. Su prompt trae solo los datos de
-la corrida, no reglas: qué checklists y, si ya se saben, la URL de la aplicación, con qué datos probar y si
-autoriza escrituras.
+la corrida, no reglas: qué checklists y, si ya se saben, la herramienta con la que maneja la aplicación, la URL
+de la aplicación, con qué datos probar y si autoriza escrituras.
 
-- **La herramienta y la aplicación.** Antes que nada, confirma tres cosas: que responde la herramienta que
-  declara el `CLAUDE.md`, sea el MCP del navegador o el dispositivo conectado; que el repo está en la rama de
-  trabajo de quien lo lanzó, y que el `checklists.md` y el roadmap de la iniciativa no tienen cambios sin commit.
+- **La herramienta y la aplicación.** Antes que nada, confirma tres cosas: que responde la herramienta del
+  prompt o, si no trae ninguna, la que declara el `CLAUDE.md`, sea el MCP del navegador o el dispositivo
+  conectado; que el repo está en la rama de trabajo de quien lo lanzó, y que el `checklists.md` y el roadmap de
+  la iniciativa no tienen cambios sin commit.
   Usa la aplicación de la URL del prompt, si la trae; si no, la que ya esté corriendo, o la levanta en segundo
   plano con el comando que declara el `CLAUDE.md`. Si algo de esto falla, se detiene y avisa: no prueba con otra
   herramienta, no cambia de rama ni toca esos cambios.
@@ -319,9 +320,9 @@ autoriza escrituras.
 - **Prueba como una persona.** Hace clic o toca, escribe en los campos y mira el resultado. No cambia la acción
   por un script ni por una lectura de la base de datos, salvo que el **Expected:** lo pida.
 - **Prueba todo lo que está a su alcance.** Un juicio visual lo hace sobre una captura de pantalla y un archivo
-  descargado lo abre. Una pantalla de teléfono la prueba en el dispositivo que declara el `CLAUDE.md`, y solo si
-  no declara ninguno, la emula en el navegador. Lo que aun así no puede comprobar entero lo deja en `⚪ Not run`,
-  nunca en `Blocked`, y escribe en el punto qué intentó, con **Handoff:**.
+  descargado lo abre. Una pantalla de teléfono la prueba en el dispositivo que nombra el prompt o declara el
+  `CLAUDE.md`, y solo si no hay ninguno, la emula en el navegador. Lo que aun así no puede comprobar entero lo
+  deja en `⚪ Not run`, nunca en `Blocked`, y escribe en el punto qué intentó, con **Handoff:**.
 - **Escribe solo con permiso, y lo pide siempre.** Para crear, guardar o borrar necesita que el administrador lo
   autorice. Si un punto lo necesita y el prompt no lo autoriza, pide el permiso antes de empezar. Con él, usa
   registros de prueba que se reconozcan por su nombre y los borra al terminar; sin él, el punto se queda en

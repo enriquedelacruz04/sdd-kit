@@ -10,7 +10,10 @@ Cambia una regla del método: el agente que corre un checklist maneja la aplicac
 `## Verification` del `CLAUDE.md` del proyecto, que es el navegador con un MCP o, si la aplicación es móvil, un
 dispositivo físico conectado a la computadora (`kit-v1` `ADR15`). Antes de empezar confirma que esa herramienta
 responde, usa la sesión que ya guarda, y una pantalla de teléfono la prueba en el dispositivo; solo la emula en el
-navegador si el proyecto no declara ninguno. La plantilla de `CLAUDE.md` pide declararlo en `## Verification`.
+navegador si no hay ninguno. La plantilla de `CLAUDE.md` pide declararlo en `## Verification`.
+
+El prompt de una corrida puede nombrar también la herramienta, y entonces manda sobre el `CLAUDE.md`. El del
+`README.md` lo hace: la web con el MCP chrome-devtools y la app móvil en un teléfono conectado por USB, con adb.
 
 **Migración:** el vigilante no cambia y ningún documento deja de pasar. Un proyecto con aplicación móvil declara
 en `## Verification` de su `CLAUDE.md` el dispositivo con el que el agente la maneja, cómo la levanta y dónde

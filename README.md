@@ -97,15 +97,18 @@ prompt lleva solo los datos de esta corrida:
 Corre los checklists 2 y 3 de docs/initiatives/<initiative>/checklists.md, siguiendo entera la sección "Cómo se corre un
 checklist" del método.
 
+- Herramienta: la web, con el MCP chrome-devtools de Google; la app móvil, en el teléfono Android conectado por
+  USB, con adb
 - Aplicación: http://localhost:5173
 - Datos de prueba: el cliente "Demo" y sus pedidos de septiembre
 - Escrituras: autorizadas, con registros de prueba que empiecen por "TEST-" y que borras al terminar
 ```
 
-Las tres líneas de datos son opcionales. Sin URL, el agente usa la aplicación que ya esté corriendo o la levanta
-con el comando del `CLAUDE.md`; sin datos, los busca en la aplicación; y sin autorización para escribir, la pide
-antes de empezar si algún punto la necesita. Antes de probar manda un solo mensaje con lo que le falta y espera
-la respuesta.
+Las cuatro líneas de datos son opcionales. Sin herramienta, el agente usa la que declara `## Verification` del
+`CLAUDE.md`, y solo emula el teléfono en el navegador si no hay dispositivo; sin URL, usa la aplicación que ya
+esté corriendo o la levanta con el comando del `CLAUDE.md`; sin datos, los busca en la aplicación; y sin
+autorización para escribir, la pide antes de empezar si algún punto la necesita. Antes de probar manda un solo
+mensaje con lo que le falta y espera la respuesta.
 
 ## Subir de versión
 

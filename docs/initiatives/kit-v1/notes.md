@@ -189,10 +189,13 @@ en el teléfono de verdad o a correr el checklist al margen del método; nombrar
 concreta, que lo ata a un sistema operativo cuando `METHODOLOGY.md` no nombra el entorno de ningún proyecto; o que
 cada proyecto declare con qué maneja el agente la aplicación. **Decisión:** la última. El método dice que la
 herramienta es el navegador con un MCP o, si la aplicación es móvil, un dispositivo físico conectado a la
-computadora, y remite a `## Verification` del `CLAUDE.md`, que la plantilla pide llenar. Una pantalla de teléfono
-se prueba en el dispositivo y solo se emula si el proyecto no declara ninguno. El precio: cambia una regla del
-método, así que es una versión mayor, la 9.0.0, aunque ningún documento deja de pasar; y el vigilante no puede
-comprobar que un proyecto con aplicación móvil declare su dispositivo, porque no sabe qué aplicación tiene.
+computadora, y remite a `## Verification` del `CLAUDE.md`, que la plantilla pide llenar. El prompt de una
+corrida puede nombrarla también, y entonces manda: así el ejemplo del `README.md`, que no viaja en el paquete,
+dice la herramienta concreta, el MCP chrome-devtools para la web y adb para el teléfono, sin que el método la
+nombre. Una pantalla de teléfono se prueba en el dispositivo y solo se emula si no hay ninguno. El precio: cambia
+una regla del método, así que es una versión mayor, la 9.0.0, aunque ningún documento deja de pasar; y el
+vigilante no puede comprobar que un proyecto con aplicación móvil declare su dispositivo, porque no sabe qué
+aplicación tiene.
 
 ## Tech debt
 

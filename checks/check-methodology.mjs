@@ -79,12 +79,28 @@ for (const heading of ["## Branches", "## Verification"])
 
 // ---- el agente maneja la aplicación con lo que declara el proyecto. Si el método solo hablara del navegador, el
 // de una app móvil la emularía teniendo el teléfono conectado; si la plantilla no lo pidiera, ningún proyecto
-// sabría que tiene que declararlo (kit-v1 ADR15)
+// sabría que tiene que declararlo (kit-v1 ADR15). Las frases se buscan sin saltos de línea, que se mueven al
+// reajustar un párrafo.
+const prose = (content) => content.replace(/\s+/g, " ");
 for (const [where, content] of [
   ["el método", text],
   ["la plantilla de CLAUDE.md", template("CLAUDE.md")],
 ])
-  assert.ok(content.includes("dispositivo físico conectado"), `${where} no prevé el dispositivo de una app móvil`);
+  assert.ok(
+    prose(content).includes("dispositivo físico conectado"),
+    `${where} no prevé el dispositivo de una app móvil`,
+  );
+
+// ---- el prompt de ejemplo del README nombra la herramienta de la corrida: si el método no la admitiera entre los
+// datos del prompt, el agente no sabría si obedecer al prompt o al CLAUDE.md
+{
+  const readme = fs.readFileSync(new URL("../README.md", import.meta.url), "utf8").replace(/\r\n/g, "\n");
+  assert.ok(readme.includes("\n- Herramienta: "), "el prompt de ejemplo del README no nombra la herramienta");
+  assert.ok(
+    prose(text).includes("la herramienta con la que maneja la aplicación"),
+    "el método no admite la herramienta entre los datos del prompt",
+  );
+}
 
 // ---- los comandos que el método manda correr son los que el kit tiene
 for (const command of ["sddkit init", "sddkit new <initiative>", "npm run check:docs"])
